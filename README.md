@@ -1,0 +1,2 @@
+# TigerQuiz
+a spigot plugin
