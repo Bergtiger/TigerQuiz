@@ -1,5 +1,6 @@
 package de.bergtiger.tigerquiz;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -10,6 +11,8 @@ public abstract class Session {
 	protected List<Question> questions;
 	private int quizSize;
 	private int quizMaxSize;
+	private boolean prefix;
+	private boolean ordered;
 	
 	protected Question currentQuestion; //latest question
 	
@@ -57,11 +60,38 @@ public abstract class Session {
 	 * different Session types: random question ordered question
 	 * @return
 	 */
-	abstract Question getQuestion();
+	private Question getQuestion() {
+		if(this.ordered) {
+			if(this.questions.size() < this.quizSize){
+				return this.questions.get(this.quizSize);
+			}
+		} else {
+			if((this.questions != null) && (!this.questions.isEmpty())){
+				List<Question> questions = new ArrayList<Question>();
+				for(Question question : this.questions){
+					if(!question.getDemand()) {
+						questions.add(question);
+					}
+				}
+				if(!questions.isEmpty()) return questions.get((int)(Math.random() * questions.size()));
+			}
+		}
+		return null;
+	}
 	
 	/**
-	 * 
-	 * @return
+	 * shows status how many questions left
+	 * @return "(x/n)" - ""
 	 */
-	abstract String getPrefix();
+	private String getPrefix() {
+		if(this.prefix)	return "(" + this.quizSize + "/" + this.quizMaxSize + ") ";
+		return "";
+	}
+	
+	/**
+	 * ends session immediately
+	 */
+	public void exit() {
+		//TODO
+	}
 }

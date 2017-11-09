@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class Answer {
 
 	private int slot;
+	private boolean function;
 	private boolean correct;
 	private ItemStack item;
 	
@@ -18,6 +19,14 @@ public class Answer {
 	 */
 	public int getSlot() {
 		return this.slot;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean hasFunction() {
+		return this.function;
 	}
 	
 	/**
