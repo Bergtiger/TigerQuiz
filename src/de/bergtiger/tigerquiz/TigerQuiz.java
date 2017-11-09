@@ -4,6 +4,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TigerQuiz extends JavaPlugin {
 	
+	private SessionOverview sessionOverview;
+	
 	@Override
 	public void onEnable(){
 		this.getLogger().info("starting");
@@ -14,4 +16,18 @@ public class TigerQuiz extends JavaPlugin {
 		this.getLogger().info("end");
 	}
 
+	/**
+	 * class with all sessions from the players
+	 * @return
+	 */
+	public SessionOverview getSessions(){
+		return this.sessionOverview;
+	}
+	
+	/**
+	 * reloads Plugin (Data)
+	 */
+	public void reload(){
+		//TODO
+	}
 }

@@ -1,7 +1,15 @@
 package de.bergtiger.tigerquiz.data;
 
 public enum MyPermission {
-	P_ADMIN ("userlist.admin");
+	ADMIN ("tigerquiz.admin"),
+	USER ("tigerquiz.user"),
+	
+	COMMANDS ("tigerquiz.commands"),
+	PLUGININFO ("tigerquiz.info"),
+	RELOAD ("tigerquiz.reload"),
+	QUIZ_CREATE ("tigerquiz.quiz.create"),
+	QUIZ_START ("tigerquiz.quiz.start"),
+	QUIZ_START_OTHER ("tigerquiz.quiz.start.other");
 	
 	private String permission;
 	
@@ -11,9 +19,5 @@ public enum MyPermission {
 	
 	public String get(){
 		return this.permission;
-	}
-	
-	public static String get(MyPermission myPermission){
-		return myPermission.get();
 	}
 }
