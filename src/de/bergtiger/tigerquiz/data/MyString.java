@@ -1,5 +1,7 @@
 package de.bergtiger.tigerquiz.data;
 
+import org.bukkit.ChatColor;
+
 public enum MyString {
 	NOPERMISSIONS ("&cYou are not permitted to use this Command."),
 	NOPLAYER ("&cYou are not a Player with chest"),
@@ -43,7 +45,7 @@ public enum MyString {
 	 * Gets String
 	 * @return
 	 */
-	public String getString(){
+	public String get(){
 		return this.args;
 	}
 	
@@ -52,7 +54,7 @@ public enum MyString {
 	 * @return
 	 */
 	@SuppressWarnings("static-access")
-	public String getStringColored(){
+	public String colored(){
 		return this.setColor(this.args);
 	}
 	
