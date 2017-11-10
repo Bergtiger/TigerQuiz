@@ -8,10 +8,24 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Answer {
 
-	private int slot;
+	protected int slot;
 	private boolean function;
 	private boolean correct;
 	private ItemStack item;
+	
+	/**
+	 * 
+	 * @param slot - position 0 - 8 first row - + 9 ech row
+	 * @param item - itemstack, this will be the shown item
+	 * @param function - if it has a function - like true/false
+	 * @param correct - the true/false value
+	 */
+	public Answer(int slot, ItemStack item, boolean function, boolean correct){
+		this.slot = slot;
+		this.item = item;
+		this.function = function;
+		this.correct = correct;
+	}
 	
 	/**
 	 * position in inventory

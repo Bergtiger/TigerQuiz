@@ -43,6 +43,15 @@ public abstract class Question {
 	
 	/**
 	 * 
+	 * @param slot
+	 * @return true if return, false else
+	 */
+	public boolean isReturn(int slot){
+		return (slot == (Math.max(1, 9 * this.size) - 1)) ? true : false;
+	}
+	
+	/**
+	 * 
 	 * @param slot - item clicked by player
 	 * @return if the answer was correct
 	 */
