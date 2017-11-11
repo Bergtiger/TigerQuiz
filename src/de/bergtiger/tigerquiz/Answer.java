@@ -28,6 +28,14 @@ public class Answer {
 	}
 	
 	/**
+	 * get a new Instance of this answer
+	 * @return
+	 */
+	public Answer copy() {
+		return new Answer(this.slot, this.item, this.function, this.correct);
+	}
+	
+	/**
 	 * position in inventory
 	 * @return
 	 */

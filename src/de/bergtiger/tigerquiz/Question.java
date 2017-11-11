@@ -12,9 +12,14 @@ public abstract class Question {
 	
 	protected List<Answer> answers;
 	private boolean demand = false;
-	private int size;
-	private String title;
+	protected int size;
+	protected String title;
 	
+	public Question(String title, List<Answer> answers, int size) {
+		this.title = title;
+		this.answers = answers;
+		this.size = size;
+	}
 	
 	/**
 	 * sets the posible answers;
@@ -56,6 +61,12 @@ public abstract class Question {
 	 * @return if the answer was correct
 	 */
 	abstract boolean getCorrect(int slot);
+	
+	/**
+	 * creates new Instance of this Question
+	 * @return
+	 */
+	abstract Question copy();
 	
 	/**
 	 * when Question should only shown once

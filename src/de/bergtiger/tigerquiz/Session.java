@@ -5,16 +5,68 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-public abstract class Session {
+public class Session {
 
+	private String quizName;
 	private Player player;
 	protected List<Question> questions;
-	private int quizSize;
+	private int quizSize = 0;
 	private int quizMaxSize;
 	private boolean prefix;
 	private boolean ordered;
+	private boolean oneTimeUse;
 	
 	protected Question currentQuestion; //latest question
+	
+	public Session(String quizName, int quizMaxSize, boolean prefix, boolean ordered, boolean oneTimeUse) {
+		this.quizName = quizName;
+		this.quizMaxSize = quizMaxSize;
+		this.prefix = prefix;
+		this.ordered = ordered;
+		this.oneTimeUse = oneTimeUse;
+	}
+	
+	/**
+	 * save player set - if there is a player in this session you can not set an other one
+	 * @param player
+	 * @return if set was succesful
+	 */
+	public boolean setPlayer(Player player) {
+		if(this.player == null) {
+			this.player = player;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * sets the questions
+	 * @param questions
+	 */
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
+	
+	/**
+	 * if quiz is onetimeuse
+	 * @return
+	 */
+	public boolean getOneTimeUse() {return this.oneTimeUse;}
+	
+	/**
+	 * 
+	 * @return new Instance of this Quiz
+	 */
+	public Session copy() {
+		List<Question> questions = null;
+		if((this.questions != null) && (!this.questions.isEmpty())) {
+			questions = new ArrayList<Question>();
+			for (Question question : this.questions) {
+				questions.add(question.copy());
+			}
+		}
+		return new Session(this.quizName, this.quizMaxSize, this.prefix, this.ordered, this.oneTimeUse);
+	}
 	
 	/**
 	 * perform when player clicked an item
@@ -43,7 +95,7 @@ public abstract class Session {
 			//next question
 			Question question = this.getQuestion();
 			if(question != null){
-				this.player.openInventory(question.getInventory(this.getPrefix()));
+				this.player.openInventory(question.getInventory(this.getTitle() + this.quizName + ": "));
 				question.setDemand();
 				this.currentQuestion = question;
 				this.quizSize++;
@@ -83,7 +135,7 @@ public abstract class Session {
 	 * shows status how many questions left
 	 * @return "(x/n)" - ""
 	 */
-	private String getPrefix() {
+	private String getTitle() {
 		if(this.prefix)	return "(" + this.quizSize + "/" + this.quizMaxSize + ") ";
 		return "";
 	}

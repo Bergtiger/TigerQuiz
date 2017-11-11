@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
+import de.bergtiger.tigerquiz.data.MyString;
+
 public class SessionOverview {
 
 	private TigerQuiz plugin;
@@ -16,6 +18,16 @@ public class SessionOverview {
 	 * @return false (player in quiz, quiz not exists) true else
 	 */
 	public boolean startSession(String quiz, Player p) {
+		if(!this.sessions.containsKey(p.getName())) {
+			if(p.hasPermission("tigerquiz." + quiz)) {
+				
+			} else {
+				p.sendMessage(MyString.NOPERMISSIONS.colored());
+			}
+		} else {
+			//TODO
+			p.sendMessage("hasQuiz");
+		}
 		return false;
 	}
 	
