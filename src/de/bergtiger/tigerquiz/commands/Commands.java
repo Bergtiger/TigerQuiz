@@ -19,6 +19,15 @@ public class Commands implements CommandExecutor{
 		if(args.length > 0) {
 			switch (args[0].toLowerCase()) {
 				case "start" : this.startQuiz(cs, args); break;
+				
+				case "createquiz"		: this.createQuiz(cs, args); break;
+				case "createquestion"	: this.createQuestion(cs, args); break;
+				case "createanswer"		: this.createAnswer(cs, args); break;
+				
+				case "deletequiz"		: this.deleteQuiz(cs, args); break;
+				case "deletequestion"	: this.deleteQuestion(cs, args); break;
+				case "deleteanswer"		: this.deleteAnswer(cs, args); break;
+				
 				case "reload" : this.reload(cs); break;
 				default: this.commands(cs); break;
 			}
@@ -73,7 +82,85 @@ public class Commands implements CommandExecutor{
 			//getQuiz
 			//startQuiz
 		} else {
-			//no Player
+			cs.sendMessage(MyString.QUIZ_START_NOPLAYER.colored());
+		}
+	}
+	
+	private void createQuiz(CommandSender cs, String[] args) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get())) {
+			//create(0) [name](1) [size](2) [error](3) [showProgress](4) [ordered](5) [oneTimeUse](6)
+			if(args.length >= 2) {
+				String name;
+				//checkk if quiz with this name exists
+				boolean error = true;
+				boolean showProgress = true;
+				boolean ordered = true;
+				boolean oneTimeUse = false;
+				if(args.length >= 3) {
+					error = Boolean.valueOf(args[3]);
+				}
+				if(args.length >= 4) {
+					showProgress = Boolean.valueOf(args[4]);
+				}
+				if(args.length >= 5) {
+					ordered = Boolean.valueOf(args[5]);
+				}
+				if(args.length >= 6) {
+					ordered = Boolean.valueOf(args[6]);
+				}
+					
+			} else {
+				//min size 2
+			}
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+		}
+	}
+	
+	private void createQuestion(CommandSender cs, String[] args) {
+		
+	}
+	
+	private void createAnswer(CommandSender cs, String[] args) {
+		
+	}
+	
+	/**
+	 * löscht ein quiz
+	 * @param cs
+	 * @param args
+	 */
+	private void deleteQuiz(CommandSender cs, String[] args) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get())) {
+			//delete [quiz]
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+		}
+	}
+	
+	/**
+	 * löscht eine frage von einem quiz
+	 * @param cs
+	 * @param args
+	 */
+	private void deleteQuestion(CommandSender cs, String[] args) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_QUESTION.get())) {
+			//delete [quiz] [question]
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+		}
+	}
+	
+	/**
+	 * löscht eine antwort von einer frage von einem quiz
+	 * @param cs
+	 * @param args
+	 */
+	private void deleteAnswer(CommandSender cs, String[] args) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_ANSWER.get())) {
+			//delete [quiz] [question] [answer]
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}
 	}
 	

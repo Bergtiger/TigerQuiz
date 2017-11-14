@@ -11,7 +11,6 @@ import org.bukkit.inventory.Inventory;
 public abstract class Question {
 	
 	protected List<Answer> answers;
-	private boolean demand = false;
 	protected int size;
 	protected String title;
 	
@@ -67,19 +66,4 @@ public abstract class Question {
 	 * @return
 	 */
 	abstract Question copy();
-	
-	/**
-	 * when Question should only shown once
-	 * @return
-	 */
-	public boolean getDemand(){
-		return this.demand;
-	}
-	
-	/**
-	 * when question is shown set Demand
-	 */
-	public void setDemand(){
-		this.demand = true;
-	}
 }

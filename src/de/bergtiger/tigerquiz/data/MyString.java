@@ -22,7 +22,8 @@ public enum MyString {
 	QUIZ_CANCEL ("&cQuiz canceled"),
 	QUIZ_LOAD_ONETIMEUSE ("&cyou have already done the quiz"),
 	QUIZ_LOAD_ERROR ("&cQuiz load error"),
-	QUIZ_START_ERROR ("&cQuiz could not start. Player in quiz/no quiz");
+	QUIZ_START_ERROR ("&cQuiz could not start. Player in quiz/no quiz"),
+	QUIZ_START_NOPLAYER ("&cNot a Player");
 	
 	private String args;
 	

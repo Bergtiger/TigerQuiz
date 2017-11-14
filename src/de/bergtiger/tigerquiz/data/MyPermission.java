@@ -7,7 +7,15 @@ public enum MyPermission {
 	COMMANDS ("tigerquiz.commands"),
 	PLUGININFO ("tigerquiz.info"),
 	RELOAD ("tigerquiz.reload"),
-	QUIZ_CREATE ("tigerquiz.quiz.create"),
+	
+	QUIZ_CREATE				("tigerquiz.quiz.create"),
+	QUIZ_CREATE_QUESTION	("tigerquiz.quiz.create.question"),
+	QUIZ_CREATE_ANSWER		("tigerquiz.quiz.create.answer"),
+	
+	QUIZ_DELETE				("tigerquiz.quiz.delte"),
+	QUIZ_DELETE_QUESTION	("tigerquiz.quiz.delete.question"),
+	QUIZ_DELETE_ANSWER		("tigerquiz.quiz.delete.andwer"),
+	
 	QUIZ_START ("tigerquiz.quiz.start"),
 	QUIZ_START_OTHER ("tigerquiz.quiz.start.other");
 	

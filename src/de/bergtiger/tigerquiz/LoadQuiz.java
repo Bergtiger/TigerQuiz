@@ -2,6 +2,7 @@ package de.bergtiger.tigerquiz;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +17,37 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class LoadQuiz {
 
 	private TigerQuiz plugin;
+	private HashMap<String, Session> quizzes;
 	
+	
+	public LoadQuiz(TigerQuiz plugin) {
+		this.plugin = plugin;
+	}
+	
+	public Session loadQuiz(String quiz) {
+		if(!this.quizzes.containsKey(quiz)) {
+			//loadQuiz
+			this.loadQuizConfig(quiz);
+		}
+		return this.newQuizSession(quiz);
+	}
+	
+	/**
+	 * returns a new Session or null if quiz not exists
+	 * @param quiz
+	 * @return
+	 */
+	private Session newQuizSession(String quiz) {
+		if(this.quizzes.containsKey(quiz)) {
+			return quizzes.get(quiz).copy(); 
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param quiz
+	 */
 	private void loadQuizConfig(String quiz) {
 		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
 		if(file.exists()) {
@@ -25,6 +56,7 @@ public class LoadQuiz {
 			int size = -1;
 			int maxError = -1;
 			boolean showProgress = true;
+			boolean ordered = true;
 			boolean oneTimeUse = false;
 			List<String> reward = null;
 			
@@ -68,9 +100,16 @@ public class LoadQuiz {
 			if(cfg.contains("Reward")) {
 				reward = cfg.getStringList("Reward");
 			}
+			this.quizzes.put(quiz, new Session(quiz, size, showProgress, ordered, oneTimeUse));
 		}
 	}
 	
+	/**
+	 * 
+	 * @param quiz - name/id of quiz
+	 * @param player - should be uuid
+	 * @return -1 if nothing there
+	 */
 	public int checkQuizPlayer(String quiz, String player) {
 		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "player.yml");
 		if(file.exists()) {

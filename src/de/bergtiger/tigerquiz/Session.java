@@ -10,6 +10,7 @@ public class Session {
 	private String quizName;
 	private Player player;
 	protected List<Question> questions;
+	protected List<Question> questionsRest;
 	private int quizSize = 0;
 	private int quizMaxSize;
 	private boolean prefix;
@@ -82,6 +83,10 @@ public class Session {
 		}
 	}
 	
+	public void penaltyQuestion() {
+		this.quizMaxSize++;
+	}
+	
 	/**
 	 * perform to show next question
 	 */
@@ -95,8 +100,7 @@ public class Session {
 			//next question
 			Question question = this.getQuestion();
 			if(question != null){
-				this.player.openInventory(question.getInventory(this.getTitle() + this.quizName + ": "));
-				question.setDemand();
+				this.player.openInventory(question.getInventory(this.getTitle()));
 				this.currentQuestion = question;
 				this.quizSize++;
 			} else {
@@ -113,19 +117,13 @@ public class Session {
 	 * @return
 	 */
 	private Question getQuestion() {
-		if(this.ordered) {
-			if(this.questions.size() < this.quizSize){
-				return this.questions.get(this.quizSize);
-			}
-		} else {
-			if((this.questions != null) && (!this.questions.isEmpty())){
-				List<Question> questions = new ArrayList<Question>();
-				for(Question question : this.questions){
-					if(!question.getDemand()) {
-						questions.add(question);
-					}
-				}
-				if(!questions.isEmpty()) return questions.get((int)(Math.random() * questions.size()));
+		if(this.questions.size() < this.quizSize) {
+			return this.questions.remove(0);
+		} else if((this.questionsRest != null) && (!this.questionsRest.isEmpty())) {
+			if(this.ordered) {
+				return this.questionsRest.remove(0);
+			} else {
+				return this.questionsRest.remove((int)(Math.random() * questions.size()));
 			}
 		}
 		return null;
@@ -136,8 +134,8 @@ public class Session {
 	 * @return "(x/n)" - ""
 	 */
 	private String getTitle() {
-		if(this.prefix)	return "(" + this.quizSize + "/" + this.quizMaxSize + ") ";
-		return "";
+		if(this.prefix)	return "(" + this.quizSize + "/" + this.quizMaxSize + ") " + this.quizName + ": ";
+		return this.quizName + ": ";
 	}
 	
 	/**
