@@ -6,6 +6,9 @@ public enum MyString {
 	NOPERMISSIONS ("&cYou are not permitted to use this Command."),
 	NOPLAYER ("&cYou are not a Player with chest"),
 	
+	NOQUIZ ("&cNot a quiz &4(&e-quiz-&4)"),
+	NOQUESTION ("&cNot a question &4(&e-question-&4)"),
+	
 	PLUGININFO_INFO_HEAD ("&a----<(&6TigerQuiz&a)>----"),
 	PLUGININFO_INFO_VERSION ("&aVersion: &e-version-"),
 	
@@ -17,6 +20,12 @@ public enum MyString {
 	COMMANDS_RELOAD ("&b/tigerlist reload - &7reloads config"),
 	
 	RELOAD ("&aTigerQuiz reloaded"), 
+	
+	QUIZ_LIST_HEAD_QUIZ ("&a----<(&6All Quiz&a)>----"),
+	QUIZ_LIST_HEAD_QUESTION ("&a---<(&6-quiz- Questions&a)>---"),
+	QUIZ_LIST_HEAD_ANSWER ("&a--<(&6-quiz- -question- Answers&a)>--"),
+	QUIZ_LIST_LIST ("  &e-list-"),
+	QUIZ_LIST_EMPTY ("  &8Nothing here"),
 	
 	QUIZ_END ("&aQuiz end"),
 	QUIZ_CANCEL ("&cQuiz canceled"),

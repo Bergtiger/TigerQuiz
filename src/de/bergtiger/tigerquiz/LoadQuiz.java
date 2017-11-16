@@ -88,6 +88,15 @@ public class LoadQuiz {
 					return;
 				}
 			}
+			if(cfg.contains("Ordered")) {
+				String args = cfg.getString("Ordered");
+				if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
+					showProgress = cfg.getBoolean("Ordered");
+				} else {
+					this.plugin.getLogger().info("wrong argument Ordered: " + cfg.getString("Ordered"));
+					return;
+				}
+			}
 			if(cfg.contains("oneTimeUse")) {
 				String args = cfg.getString("oneTimeUse");
 				if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
@@ -133,6 +142,7 @@ public class LoadQuiz {
 				//load question
 				
 				int size = -1;
+			//	String function = "quiz"; //quiz/survey
 				List<Answer> answers = new ArrayList<Answer>();
 				
 				Iterator<String> iAnswer = cfg.getConfigurationSection("Question." + question + ".Answer").getKeys(false).iterator();

@@ -1,5 +1,7 @@
 package de.bergtiger.tigerquiz.commands;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,11 +16,17 @@ public class Commands implements CommandExecutor{
 
 	private TigerQuiz plugin;
 	
+	public Commands(TigerQuiz plugin) {
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 		if(args.length > 0) {
 			switch (args[0].toLowerCase()) {
 				case "start" : this.startQuiz(cs, args); break;
+				
+				case "list" : this.list(cs, args); break;
 				
 				case "createquiz"		: this.createQuiz(cs, args); break;
 				case "createquestion"	: this.createQuestion(cs, args); break;
@@ -83,6 +91,103 @@ public class Commands implements CommandExecutor{
 			//startQuiz
 		} else {
 			cs.sendMessage(MyString.QUIZ_START_NOPLAYER.colored());
+		}
+	}
+	
+	/**
+	 * list quiz / questions / answers
+	 * @param cs
+	 * @param args
+	 */
+	private void list(CommandSender cs, String[] args) {
+		if(cs.hasPermission(MyPermission.ADMIN.get())) {
+			//tigerquiz list(0) [quiz/question/answer](1) [quiz](2) [question](3)
+			if(args.length >= 3) {
+				switch(args[1].toLowerCase()) {
+				case "quiz"		: this.listQuiz(cs); break;
+				case "question"	: if(args.length >= 3) this.listQuestion(cs, args[2]); break;
+				case "answer"	: if(args.length >= 4) this.listAnswer(cs, args[2], args[3]); break;
+				}
+			} else {
+				//commandhelp
+			}
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+		}
+	}
+	
+	/**
+	 * list all quiz
+	 * @param cs
+	 */
+	private void listQuiz(CommandSender cs) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_LIST.get())) {
+			List<String> quizes = this.plugin.getQuiz().getQuizes();
+			cs.sendMessage(MyString.QUIZ_LIST_HEAD_QUIZ.colored());
+			if((quizes != null) && (!quizes.isEmpty())) {
+				for(String args : quizes) {
+					cs.sendMessage(MyString.QUIZ_LIST_LIST.colored().replace("-list-", args));
+				}
+			} else {
+				cs.sendMessage(MyString.QUIZ_LIST_EMPTY.colored());
+			}
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+		}
+	}
+	
+	/**
+	 * list all questions from quiz
+	 * @param cs
+	 * @param quiz - name/id of quiz
+	 */
+	private void listQuestion(CommandSender cs, String quiz) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_QUESTION.get())) {
+			if(this.plugin.getQuiz().isQuiz(quiz)) {
+				List<String> questions = this.plugin.getQuiz().getQuestions(quiz);
+				cs.sendMessage(MyString.QUIZ_LIST_HEAD_QUESTION.colored());
+				if((questions != null) && (!questions.isEmpty())) {
+					for(String args : questions) {
+						cs.sendMessage(MyString.QUIZ_LIST_LIST.colored().replace("-list-", args));
+					}
+				} else {
+					cs.sendMessage(MyString.QUIZ_LIST_EMPTY.colored());
+				}
+			} else {
+				cs.sendMessage(MyString.NOQUIZ.colored());
+			}
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+		}
+	}
+	
+	/**
+	 * lists all answers from question from quiz
+	 * @param cs
+	 * @param quiz - name/id of quiz
+	 * @param question - question title/id
+	 */
+	private void listAnswer(CommandSender cs, String quiz, String question) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get())) {
+			if(this.plugin.getQuiz().isQuiz(quiz)) {
+				if(this.plugin.getQuiz().isQuestion(quiz, question)) {
+					List<String> answers = this.plugin.getQuiz().getAnswers(quiz, question);
+					cs.sendMessage(MyString.QUIZ_LIST_HEAD_ANSWER.colored());
+					if((answers != null) && (!answers.isEmpty())) {
+						for(String args : answers) {
+							cs.sendMessage(MyString.QUIZ_LIST_LIST.colored().replace("-list-", args));
+						}
+					} else {
+						cs.sendMessage(MyString.QUIZ_LIST_EMPTY.colored());
+					}
+				} else {
+					cs.sendMessage(MyString.NOQUESTION.colored());
+				}
+			} else {
+				cs.sendMessage(MyString.NOQUIZ.colored());
+			}
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}
 	}
 	

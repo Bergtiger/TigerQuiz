@@ -11,6 +11,10 @@ public class SessionOverview {
 	private TigerQuiz plugin;
 	private HashMap<String, Session> sessions;
 	
+	public SessionOverview(TigerQuiz plugin) {
+		this.plugin = plugin;
+	}
+	
 	/**
 	 * starts a Session
 	 * @param quiz - quizname
