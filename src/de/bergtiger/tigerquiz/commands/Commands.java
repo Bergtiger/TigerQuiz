@@ -238,6 +238,22 @@ public class Commands implements CommandExecutor{
 	private void deleteQuiz(CommandSender cs, String[] args) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get())) {
 			//delete [quiz]
+			//yes question warning ?
+			if(args.length >= 2) {
+				String quiz = args[1];
+				if(this.plugin.getQuiz().isQuiz(quiz)) {
+					if(this.plugin.getQuiz().deleteQuiz(quiz)) {
+						cs.sendMessage(MyString.QUIZ_DELETE_QUIZ.colored().replace("-quiz-", quiz));
+					} else {
+						cs.sendMessage(MyString.QUIZ_DELETE_ERROR.colored());
+					}
+				} else {
+					cs.sendMessage(MyString.NOQUIZ.colored().replace("-quiz-", quiz));
+				}
+			} else {
+				//TODO
+				//cmd help
+			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}
@@ -250,7 +266,27 @@ public class Commands implements CommandExecutor{
 	 */
 	private void deleteQuestion(CommandSender cs, String[] args) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_QUESTION.get())) {
-			//delete [quiz] [question]
+			//tigerquiz deleteQuestion(0) [quiz](1) [question](2)
+			if(args.length >= 3) {
+				String quiz = args[1];
+				String question = args[2];
+				if(this.plugin.getQuiz().isQuiz(quiz)) {
+					if(this.plugin.getQuiz().isQuestion(quiz, question)) {
+						if(this.plugin.getQuiz().deleteQuestion(quiz, question)) {
+							cs.sendMessage(MyString.QUIZ_DELETE_QUESTION.colored().replace("-quiz-", quiz).replace("-question-", question));
+						} else {
+							cs.sendMessage(MyString.QUIZ_DELETE_ERROR.colored());
+						}
+					} else {
+						cs.sendMessage(MyString.NOQUESTION.colored().replace("-question-", question));
+					}
+				} else {
+					cs.sendMessage(MyString.NOQUIZ.colored().replace("-quiz-", quiz));
+				}
+			} else {
+				//TODO
+				//cmd help
+			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}
@@ -263,7 +299,28 @@ public class Commands implements CommandExecutor{
 	 */
 	private void deleteAnswer(CommandSender cs, String[] args) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_ANSWER.get())) {
-			//delete [quiz] [question] [answer]
+			//tigerquiz deleteanswer(0) [quiz](1) [question](2) [answer](3)
+			if(args.length >= 4) {
+				String quiz = args[1];
+				String question = args[2];
+				String answer = args[3];
+				if(this.plugin.getQuiz().isQuiz(quiz)) {
+					if(this.plugin.getQuiz().isQuestion(quiz, question)) {
+						if(this.plugin.getQuiz().isAnswer(quiz, question, answer)) {
+							cs.sendMessage(MyString.QUIZ_DELETE_ANSWER.colored().replace("-quiz-", quiz).replace("-question-", question).replace("-answer-", answer));
+						} else {
+							cs.sendMessage(MyString.NOANSWER.colored().replace("-answer-", answer));
+						}
+					} else {
+						cs.sendMessage(MyString.NOQUESTION.colored().replace("-question-", question));
+					}
+				} else {
+					cs.sendMessage(MyString.NOQUIZ.colored().replace("-quiz-", quiz));
+				}
+			} else {
+				//TODO
+				//cmd help
+			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}
