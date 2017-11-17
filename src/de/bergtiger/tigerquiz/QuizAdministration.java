@@ -8,13 +8,20 @@ import java.util.List;
 import org.bukkit.Warning;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 public class QuizAdministration {
 
 	private TigerQuiz plugin;
+	private LoadQuiz loadQuiz;
 	
 	public QuizAdministration(TigerQuiz plugin) {
 		this.plugin = plugin;
+		this.loadQuiz = new LoadQuiz(this.plugin);
+	}
+	
+	public LoadQuiz load() {
+		return this.loadQuiz;
 	}
 	
 	/**
@@ -308,5 +315,45 @@ public class QuizAdministration {
 			}
 		}
 		return null;
+	}
+	
+	public boolean savePlayer(Player player) {
+		return false;
+	}
+	
+	public boolean savePlayerError(Player player, String quiz, int error) {
+		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "errors.yml");
+		if(file.exists()) {
+			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			if(cfg.contains(player.getUniqueId().toString())){
+				cfg.set(player.getUniqueId().toString(), error);
+			} else {
+				cfg.addDefault(player.getUniqueId().toString(), error);
+			}
+			cfg.options().copyDefaults(true);
+			cfg.options().copyHeader(true);
+			
+			try {
+				cfg.save(file);
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} else {
+			//create file
+			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			cfg.addDefault(player.getUniqueId().toString(), error);
+			cfg.options().copyDefaults(true);
+			cfg.options().copyHeader(true);
+			cfg.options().header("SaveFile for Player Errors from Quiz (" + quiz + ")");
+			try {
+				cfg.save(file);
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 }

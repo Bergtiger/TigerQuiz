@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.bergtiger.tigerquiz.Session;
 import de.bergtiger.tigerquiz.TigerQuiz;
 import de.bergtiger.tigerquiz.data.MyPermission;
 import de.bergtiger.tigerquiz.data.MyString;
@@ -54,6 +55,10 @@ public class Commands implements CommandExecutor{
 			cs.sendMessage(MyString.COMMANDS_HEAD.colored());
 			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get())) cs.sendMessage(MyString.COMMANDS_HELP.colored());
 			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.RELOAD.get())) cs.sendMessage(MyString.COMMANDS_RELOAD.colored());
+			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get()) || cs.hasPermission(MyPermission.QUIZ_START_OTHER.get()) || cs.hasPermission(MyPermission.QUIZ_START.get())) cs.sendMessage(MyString.COMMANDS_START.colored());
+			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_LIST.get())) cs.sendMessage(MyString.COMMANDS_LIST.colored());
+			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_ANSWER.get())) cs.sendMessage(MyString.COMMANDS_CREATE.colored());
+			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_ANSWER.get())) cs.sendMessage(MyString.COMMANDS_DELETE.colored());
 		}
 	}
 	
@@ -85,10 +90,27 @@ public class Commands implements CommandExecutor{
 	 * @param p
 	 */
 	private void startQuiz(CommandSender cs, String quiz, Player p) {
-		//TODO
 		if(p != null) {
 			//getQuiz
-			//startQuiz
+			if(!this.plugin.getSessions().hasSession(p)) {
+				Session session = this.plugin.getQuiz().load().loadQuiz(quiz);
+				if(session.getOneTimeUse() && this.plugin.getQuiz().load().checkQuizPlayer(quiz, p)) {
+					//has done
+					if(cs.getName().equalsIgnoreCase(p.getName())) {
+						cs.sendMessage(MyString.QUIZ_DONE_SELF.colored().replace("-quiz-", quiz));
+					} else {
+						cs.sendMessage(MyString.QUIZ_DONE_OTHER.colored().replace("-quiz-", quiz).replace("-player-", p.getName()));
+					}
+				} else {
+					//startQuiz
+					int error = this.plugin.getQuiz().load().getQuizPlayerError(quiz, p);
+					session.setPlayer(p, error);
+					this.plugin.getSessions().startSession(session);
+				}
+			} else {
+				//has session
+				cs.sendMessage(MyString.QUIZ_INSIDE.colored().replace("-player-", p.getName()));
+			}
 		} else {
 			cs.sendMessage(MyString.QUIZ_START_NOPLAYER.colored());
 		}
@@ -100,7 +122,7 @@ public class Commands implements CommandExecutor{
 	 * @param args
 	 */
 	private void list(CommandSender cs, String[] args) {
-		if(cs.hasPermission(MyPermission.ADMIN.get())) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_LIST.get())) {
 			//tigerquiz list(0) [quiz/question/answer](1) [quiz](2) [question](3)
 			if(args.length >= 3) {
 				switch(args[1].toLowerCase()) {
@@ -223,11 +245,19 @@ public class Commands implements CommandExecutor{
 	}
 	
 	private void createQuestion(CommandSender cs, String[] args) {
-		
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_QUESTION.get())) {
+			
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+		}
 	}
 	
 	private void createAnswer(CommandSender cs, String[] args) {
-		
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_ANSWER.get())) {
+			
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+		}
 	}
 	
 	/**

@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import de.bergtiger.tigerquiz.data.MyString;
-
 public class SessionOverview {
 
 	private TigerQuiz plugin;
@@ -17,20 +15,20 @@ public class SessionOverview {
 	
 	/**
 	 * starts a Session
-	 * @param quiz - quizname
-	 * @param p - player
-	 * @return false (player in quiz, quiz not exists) true else
+	 * @param session
+	 * @return
 	 */
-	public boolean startSession(String quiz, Player p) {
-		if(!this.sessions.containsKey(p.getName())) {
-			if(p.hasPermission("tigerquiz." + quiz)) {
-				
-			} else {
-				p.sendMessage(MyString.NOPERMISSIONS.colored());
-			}
+	public boolean startSession(Session session) {
+		if(this.sessions == null) {
+			this.sessions = new HashMap<String, Session>();
+		}
+		if(!this.sessions.containsKey(session.getPlayer().getName())) {
+			this.sessions.put(session.getPlayer().getName(), session);
+			//getQuestions
+			session.start();
+			return true;
 		} else {
-			//TODO
-			p.sendMessage("hasQuiz");
+			this.plugin.getLogger().info("Could not start Quiz. Did you check the player session before?");
 		}
 		return false;
 	}
@@ -57,5 +55,37 @@ public class SessionOverview {
 			return this.sessions.get(p);
 		}
 		return null;
+	}
+	
+	/**
+	 * removes Session from List
+	 * @param p
+	 * @return
+	 */
+	public boolean removeSession(Player p) {
+		if((this.sessions != null) && (!this.sessions.isEmpty())) {
+			if(this.sessions.remove(p.getName()) != null) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * adds Session to list without starting (needed ?)
+	 * @param session
+	 * @return
+	 */
+	public boolean addSession(Session session) {
+		if(this.sessions == null) {
+			this.sessions = new HashMap<String, Session>();
+		}
+		if(!this.sessions.containsKey(session.getPlayer().getName())) {
+			this.sessions.put(session.getPlayer().getName(), session);
+			return true;
+		} else {
+			this.plugin.getLogger().info("Could not start Quiz. Did you check the player session before?");
+		}
+		return false;
 	}
 }

@@ -3,28 +3,34 @@ package de.bergtiger.tigerquiz;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Session {
 
+	private TigerQuiz plugin;
 	private String quizName;
 	private Player player;
-	protected List<Question> questions;
-	protected List<Question> questionsRest;
+	protected List<Question> questions; //normal questions
+	protected List<Question> questionsRest; //questions which will be used when spezial error behavior (quizlength++)
+	protected List<String> reward;
 	private int quizSize = 0;
 	private int quizMaxSize;
+	private int error = 0;
 	private boolean prefix;
 	private boolean ordered;
 	private boolean oneTimeUse;
 	
 	protected Question currentQuestion; //latest question
 	
-	public Session(String quizName, int quizMaxSize, boolean prefix, boolean ordered, boolean oneTimeUse) {
+	public Session(TigerQuiz plugin, String quizName, int quizMaxSize, boolean prefix, boolean ordered, boolean oneTimeUse, List<String> reward) {
+		this.plugin = plugin;
 		this.quizName = quizName;
 		this.quizMaxSize = quizMaxSize;
 		this.prefix = prefix;
 		this.ordered = ordered;
 		this.oneTimeUse = oneTimeUse;
+		this.reward = reward;
 	}
 	
 	/**
@@ -35,6 +41,21 @@ public class Session {
 	public boolean setPlayer(Player player) {
 		if(this.player == null) {
 			this.player = player;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * save player set - if there is a player in this session you can not set an other one
+	 * @param player
+	 * @param error
+	 * @return if set was succesful
+	 */
+	public boolean setPlayer(Player player, int error) {
+		if(this.player == null) {
+			this.player = player;
+			this.error = error;
 			return true;
 		}
 		return false;
@@ -56,6 +77,14 @@ public class Session {
 	
 	/**
 	 * 
+	 * @return player from this session
+	 */
+	public Player getPlayer() {
+		return this.player;
+	}
+	
+	/**
+	 * 
 	 * @return new Instance of this Quiz
 	 */
 	public Session copy() {
@@ -66,7 +95,7 @@ public class Session {
 				questions.add(question.copy());
 			}
 		}
-		return new Session(this.quizName, this.quizMaxSize, this.prefix, this.ordered, this.oneTimeUse);
+		return new Session(this.plugin, this.quizName, this.quizMaxSize, this.prefix, this.ordered, this.oneTimeUse, this.reward);
 	}
 	
 	/**
@@ -79,10 +108,15 @@ public class Session {
 				this.nextQuestion();
 			} else {
 				//wrong answer - abort
+				this.exit();
+				this.plugin.getQuiz().savePlayerError(player, this.quizName, this.error + 1);
 			}
 		}
 	}
 	
+	/**
+	 * spezial error behavior
+	 */
 	public void penaltyQuestion() {
 		this.quizMaxSize++;
 	}
@@ -94,6 +128,7 @@ public class Session {
 		if(currentQuestion != null){
 			//close currentQuestion
 			//TODO WARNING - openInventory forces closeInventory
+			this.closeInventory();
 		}
 		//open new Question
 		if(this.quizSize < this.quizMaxSize){
@@ -105,11 +140,19 @@ public class Session {
 				this.quizSize++;
 			} else {
 				//quiz end - no new question avaible
+				this.end();
 			}
 		} else {
-			//quiz end
+			this.end();
 		}
 		return false;
+	}
+	
+	private boolean closeInventory() {
+		this.plugin.getSessions().removeSession(this.player);
+		this.player.closeInventory();
+		this.plugin.getSessions().addSession(this);
+		return true;
 	}
 	
 	/**
@@ -139,9 +182,30 @@ public class Session {
 	}
 	
 	/**
+	 * starts first Question
+	 */
+	public void start() {
+		this.nextQuestion();
+	}
+	
+	/**
+	 * 
+	 */
+	private void end() {
+		for(String args : this.reward) {
+			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args);
+		}
+		//save player
+		if(this.oneTimeUse) {
+			this.plugin.getQuiz().savePlayer(this.player);
+		}
+	}
+	
+	/**
 	 * ends session immediately
 	 */
 	public void exit() {
 		//TODO
+		this.closeInventory();
 	}
 }

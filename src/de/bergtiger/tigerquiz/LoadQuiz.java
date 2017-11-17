@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -54,7 +55,6 @@ public class LoadQuiz {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			
 			int size = -1;
-			int maxError = -1;
 			boolean showProgress = true;
 			boolean ordered = true;
 			boolean oneTimeUse = false;
@@ -69,14 +69,6 @@ public class LoadQuiz {
 						this.plugin.getLogger().info("wrong argument Size: " + args);
 						return;
 					}
-				}
-			}
-			if(cfg.contains("maxError")) {
-				try {
-					maxError = Integer.valueOf(cfg.getString("maxError"));
-				} catch (NumberFormatException e) {
-					this.plugin.getLogger().info("wrong argument maxError: " + cfg.getString("maxError"));
-					return;
 				}
 			}
 			if(cfg.contains("showProgress")) {
@@ -109,25 +101,39 @@ public class LoadQuiz {
 			if(cfg.contains("Reward")) {
 				reward = cfg.getStringList("Reward");
 			}
-			this.quizzes.put(quiz, new Session(quiz, size, showProgress, ordered, oneTimeUse));
+			this.quizzes.put(quiz, new Session(this.plugin, quiz, size, showProgress, ordered, oneTimeUse, reward));
 		}
 	}
 	
 	/**
-	 * 
+	 * gets the number of errors from the player
 	 * @param quiz - name/id of quiz
 	 * @param player - should be uuid
 	 * @return -1 if nothing there
 	 */
-	public int checkQuizPlayer(String quiz, String player) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "player.yml");
+	public int getQuizPlayerError(String quiz, Player player) {
+		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "errors.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-			if(cfg.contains(player)){
-				return cfg.getInt(player);
+			if(cfg.contains(player.getUniqueId().toString())){
+				return cfg.getInt(player.getUniqueId().toString());
 			}
 		}
 		return -1;
+	}
+	
+	/**
+	 * checks if player succesfuully performed the quiz
+	 * @param quiz
+	 * @param player
+	 * @return
+	 */
+	public boolean checkQuizPlayer(String quiz, Player player) {
+		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "errors.txt");
+		if(file.exists()) {
+			//uuid:name
+		}
+		return false;
 	}
 	
 	private void loadQuizQuestion(String quiz) {
@@ -159,6 +165,9 @@ public class LoadQuiz {
 					int posY = 0;
 					
 					int position = (9 * posY) + posX;
+					
+					//load answer
+					
 					ItemStack item = this.getItem(name, lore, this.getMaterial(material), data, this.getEnchantment(enchantment));
 					
 					if((position > 0) && (item != null)) {

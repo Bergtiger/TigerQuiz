@@ -18,6 +18,10 @@ public enum MyString {
 	
 	COMMANDS_HELP	("&7/plugininfo "),
 	COMMANDS_HEAD	("&a----<(&6TigerQuiz Commands&a)>----"),
+	COMMANDS_START	(""),
+	COMMANDS_LIST	(""),
+	COMMANDS_CREATE	(""),
+	COMMANDS_DELETE	(""),
 	COMMANDS_RELOAD	("&b/tigerlist reload - &7reloads config"),
 	
 	RELOAD ("&aTigerQuiz reloaded"), 
@@ -32,6 +36,10 @@ public enum MyString {
 	QUIZ_DELETE_QUESTION	("&aDeletet question&6(&e-question-&6) &afrom quiz&6(&e-quiz-&6)"),
 	QUIZ_DELETE_ANSWER		("&aDeletet answer&6(&e-answer-&6) &afromquestion&6(&e-quiz-&6:&e-question-&6)"),
 	QUIZ_DELETE_ERROR		("&cCould not save quiz."),
+	
+	QUIZ_DONE_SELF	("&cYou already did this quiz &6(&e-quiz-&6)"),
+	QUIZ_DONE_OTHER	("&e-player- &chas already done this quiz &6(&e-quiz-&6)"),
+	QUIZ_INSIDE ("&e-player- &cis inside a Quiz. He cant make both at the same time."),
 	
 	QUIZ_END		("&aQuiz end"),
 	QUIZ_CANCEL		("&cQuiz canceled"),
