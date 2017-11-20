@@ -144,4 +144,12 @@ public class Session {
 	public void exit() {
 		//TODO
 	}
+	/**
+	 * get quizname of Session
+	 * 
+	 * @return quizname
+	 */
+	public String getQuizname() {
+		return this.quizName;
+	}
 }
