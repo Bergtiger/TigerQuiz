@@ -266,8 +266,8 @@ public class LoadQuiz {
 					
 						//load answer
 
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "Name")) {
-							
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "Text")) {
+							name = cfg.getString("Question." + question + ".Answer." + answerID + "Text");
 						}
 						
 						if(cfg.contains("Question." + question + ".Answer." + answerID + "Function")) {
