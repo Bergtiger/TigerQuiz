@@ -70,10 +70,46 @@ public class Session {
 	}
 	
 	/**
+	 * sets Question and Questions rest
+	 * @param questions
+	 * @param questionsRest
+	 */
+	public void setQuestions(List<Question> questions, List<Question> questionsRest) {
+		this.questions = questions;
+		this.questionsRest = questionsRest;
+	}
+	
+	/**
+	 * get quizname of Session 
+	 * @return quizname
+	 */
+	public String getQuizName() {
+		return this.quizName;
+	}
+	
+	/**
+	 * get size of question that will be asked
+	 * @return 
+	 */
+	public int getSize() {
+		return this.quizMaxSize;
+	}
+	
+	/**
 	 * if quiz is onetimeuse
 	 * @return
 	 */
-	public boolean getOneTimeUse() {return this.oneTimeUse;}
+	public boolean getOneTimeUse() {
+		return this.oneTimeUse;
+	}
+	
+	/**
+	 * are the questions from the quiz ordered ?
+	 * @return true - ordered
+	 */
+	public boolean isOrdered() {
+		return this.ordered;
+	}
 	
 	/**
 	 * 

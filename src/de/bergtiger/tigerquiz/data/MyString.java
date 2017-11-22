@@ -18,10 +18,10 @@ public enum MyString {
 	
 	COMMANDS_HELP	("&7/plugininfo "),
 	COMMANDS_HEAD	("&a----<(&6TigerQuiz Commands&a)>----"),
-	COMMANDS_START	(""),
-	COMMANDS_LIST	(""),
-	COMMANDS_CREATE	(""),
-	COMMANDS_DELETE	(""),
+	COMMANDS_START	("&e/tigerquiz start [quiz] [player]"),
+	COMMANDS_LIST	("&e/tigerquiz list [quiz/question/answer]"),
+	COMMANDS_CREATE	("&e/tigerquiz create [quiz/question/answer]"),
+	COMMANDS_DELETE	("&e/tigerquiz delete [quiz/question/answer]"),
 	COMMANDS_RELOAD	("&b/tigerlist reload - &7reloads config"),
 	
 	RELOAD ("&aTigerQuiz reloaded"), 

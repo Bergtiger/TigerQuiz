@@ -105,6 +105,7 @@ public class Commands implements CommandExecutor{
 					//startQuiz
 					int error = this.plugin.getQuiz().load().getQuizPlayerError(quiz, p);
 					session.setPlayer(p, error);
+					this.plugin.getQuiz().load().loadQuizQuestions(session); //multiply returns
 					this.plugin.getSessions().startSession(session);
 				}
 			} else {

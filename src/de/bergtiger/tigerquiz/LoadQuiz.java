@@ -2,6 +2,7 @@ package de.bergtiger.tigerquiz;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +20,7 @@ public class LoadQuiz {
 
 	private TigerQuiz plugin;
 	private HashMap<String, Session> quizzes;
+	private HashMap<String, List<Question>> questions;
 	
 	
 	public LoadQuiz(TigerQuiz plugin) {
@@ -31,6 +33,68 @@ public class LoadQuiz {
 			this.loadQuizConfig(quiz);
 		}
 		return this.newQuizSession(quiz);
+	}
+	
+	public boolean loadQuizQuestions(Session session) {
+		if((this.questions != null) && (!this.questions.isEmpty())) {
+			if(!this.questions.containsKey(session.getQuizName())) {
+				this.loadQuizQuestion(session.getQuizName());
+			}
+			List<Question> questions = this.newQuizQuestion(session.getQuizName());
+			if(questions != null) {
+				List<Question> questionhauptfragen = new ArrayList<Question>(); //fragen die standartmäßig gestellt werden
+				//fragen die beantwortet werden müssen
+				for(int i = 0; i < questions.size(); i++) {
+					if(questions.get(i).isObligation()) {
+						questionhauptfragen.add(questions.remove(i));
+						i--;
+					}
+				}
+				//auffüllen
+				while (questionhauptfragen.size() < session.getSize()) {
+					if(!questions.isEmpty()) {
+						//sorted ?
+						if(session.isOrdered()) {
+							questionhauptfragen.add(questions.remove(0));
+						} else {
+							questionhauptfragen.add(questions.remove((int) (Math.random() * questions.size())));
+						}
+					} else {
+						break;
+					}
+				}
+				//in order -> else randomise
+				if(!session.isOrdered()) {
+					//randomise
+					try {
+						Collections.shuffle(questionhauptfragen);
+					} catch (Exception e) {
+						this.plugin.getLogger().info("can't shuffle List of questions - using ordered as default");
+					}
+				}
+				//add questions to session
+				session.setQuestions(questionhauptfragen, questions);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/** 
+	 * creates a new List of Questions (real not only pointers)
+	 * @param quiz
+	 * @return
+	 */
+	private List<Question> newQuizQuestion(String quiz) {
+		List<Question> questions = this.questions.get(quiz);
+		if((questions != null) && (questions.isEmpty())) {
+			List<Question> args = new ArrayList<Question>();
+			for(Question question : questions) {
+				args.add(question.copy());
+			}
+			return args;
+		}
+		return null;
 	}
 	
 	/**
@@ -143,43 +207,163 @@ public class LoadQuiz {
 			
 			Set<String> questions = cfg.getConfigurationSection("Question").getKeys(false);
 			Iterator<String> i = questions.iterator();
+			List<Question> questionsAll = new ArrayList<Question>();
 			while(i.hasNext()) {
 				String question = i.next(); //id
 				//load question
 				
+				boolean survey = false; //quiz/survey
+				boolean obligation = false;
 				int size = -1;
-			//	String function = "quiz"; //quiz/survey
 				List<Answer> answers = new ArrayList<Answer>();
 				
-				Iterator<String> iAnswer = cfg.getConfigurationSection("Question." + question + ".Answer").getKeys(false).iterator();
-				while(iAnswer.hasNext()) {
-					String answerID = iAnswer.next();
-					String name = null;
-					boolean function = false;
-					boolean correct = false;
-					byte data = 0;
-					List<String> lore = null;
-					String material = null;
-					List<String> enchantment = null;
-					int posX = 0;
-					int posY = 0;
-					
-					int position = (9 * posY) + posX;
-					
-					//load answer
-					
-					ItemStack item = this.getItem(name, lore, this.getMaterial(material), data, this.getEnchantment(enchantment));
-					
-					if((position > 0) && (item != null)) {
-						Answer answer = new Answer(position, item, function, correct);
-						if(answer != null) {
-							answers.add(answer);
+				//load
+				if(cfg.contains("Question." + question + ".Obligation")) {
+					String args = cfg.getString("Question." + question + ".Obligation");
+					if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
+						obligation = cfg.getBoolean("Question." + question + ".Obligation");
+					} else {
+						this.plugin.getLogger().info("wrong argument Obligation: " + cfg.getString("Question." + question + ".Obligation") + " using false as default");
+					}
+				}
+				
+				if(cfg.contains("Question." + question + ".Size")) {
+					String args = cfg.getString("Question." + question + ".Size");
+					if(!args.equalsIgnoreCase("autosize")){
+						try {
+							size = Integer.valueOf(size);
+						} catch (Exception e) {
+							this.plugin.getLogger().info("wrong argument Size: " + args + " using autosize as default");
 						}
 					}
 				}
 				
+				if(cfg.contains("Question." + question + ".Survey")) {
+					String args = cfg.getString("Question." + question + ".Function");
+					if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
+						survey = cfg.getBoolean("Question." + question + ".Survey");
+					} else {
+						this.plugin.getLogger().info("wrong argument Survey: " + cfg.getString("Question." + question + ".Survey") + " using false as default");
+					}
+				}
+				
+				//load answers
+				if(cfg.contains("Question." + question + ".Answer")) {
+					Iterator<String> iAnswer = cfg.getConfigurationSection("Question." + question + ".Answer").getKeys(false).iterator();
+					while(iAnswer.hasNext()) {
+						String answerID = iAnswer.next();
+						String name = null;
+						boolean function = false;
+						boolean correct = false;
+						byte data = 0;
+						List<String> lore = null;
+						String material = null;
+						List<String> enchantment = null;
+						int posX = 0;
+						int posY = 0;
+					
+						int position = (9 * posY) + posX;
+					
+						//load answer
+
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "Name")) {
+							
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "Function")) {
+							String args = cfg.getString("Question." + question + ".Answer." + answerID + "Function");
+							if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
+								function = cfg.getBoolean("Question." + question + ".Answer." + answerID + "Function");
+							} else {
+								this.plugin.getLogger().info("wrong argument Function: " + cfg.getString("Question." + question + ".Answer." + answerID + "Function") + " using false as default");
+							}
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "Correct")) {
+							String args = cfg.getString("Question." + question + ".Answer." + answerID + "Correct");
+							if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
+								correct = cfg.getBoolean("Question." + question + ".Answer." + answerID + "Correct");
+							} else {
+								this.plugin.getLogger().info("wrong argument Correct: " + cfg.getString("Question." + question + ".Answer." + answerID + "Correct") + " using false as default");
+							}
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "Data")) {
+							try {
+								data = Byte.valueOf(cfg.getString("Question." + question + ".Answer." + answerID + "Data"));
+							} catch (NumberFormatException e) {
+								this.plugin.getLogger().info("wrong argument Data: " + cfg.getString("Question." + question + ".Answer." + answerID + "Data") + " using 0 as default");
+							}
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "Lore")) {
+							lore = cfg.getStringList("Question." + question + ".Answer." + answerID + "Lore");
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "Material")) {
+							material = cfg.getString("Question." + question + ".Answer." + answerID + "Material");
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "Enchantment")) {
+							enchantment = cfg.getStringList("Question." + question + ".Answer." + answerID + "Enchantment");
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "posX")) {
+							try {
+								posX = Integer.valueOf("Question." + question + ".Answer." + answerID + "posX");
+							} catch (Exception e) {
+								this.plugin.getLogger().info("wrong argument posX: " + posX + " using 0 as default");
+							}
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "posY")) {
+							try {
+								posY = Integer.valueOf("Question." + question + ".Answer." + answerID + "posY");
+							} catch (Exception e) {
+								this.plugin.getLogger().info("wrong argument posY: " + posY + " using 0 as default");
+							}
+						}
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + "pos")) {
+							try {
+								position = Integer.valueOf("Question." + question + ".Answer." + answerID + "pos");
+							} catch (Exception e) {
+								this.plugin.getLogger().info("wrong argument posX: " + position + " using 0 as default");
+							}
+						}
+						
+						//get item
+					
+						ItemStack item = this.getItem(name, lore, this.getMaterial(material), data, this.getEnchantment(enchantment));
+					
+						if((position > 0) && (item != null)) {
+							Answer answer = new Answer(position, item, function, correct);
+							if(answer != null) {
+								answers.add(answer);
+							}
+						}
+					}
+				}
 				//resize
 				size = this.resize(size, answers);
+				
+				//create Question
+				if(!answers.isEmpty()) {
+					if(survey) {
+						//survey
+						questionsAll.add(new QuestionSurvey(question, obligation, answers, size));
+					} else {
+						//quiz
+						questionsAll.add(new QuestionQuiz(question, obligation, answers, size));
+					}
+				} else {
+					this.plugin.getLogger().info("Answers is Empty - Question (" + question + ") will be ignored");
+				}
+			}
+			if(!questionsAll.isEmpty()) {
+				this.questions.put(quiz, questionsAll);
+			} else {
+				this.plugin.getLogger().info("Questions is Epmty - Quiz (" + quiz + ") has no Questions");
 			}
 		}
 	}

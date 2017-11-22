@@ -13,9 +13,11 @@ public abstract class Question {
 	protected List<Answer> answers;
 	protected int size;
 	protected String title;
+	protected boolean obligation;
 	
-	public Question(String title, List<Answer> answers, int size) {
+	public Question(String title, boolean obligation, List<Answer> answers, int size) {
 		this.title = title;
+		this.obligation = obligation;
 		this.answers = answers;
 		this.size = size;
 	}
@@ -43,6 +45,14 @@ public abstract class Question {
 			return inventory;
 		}
 		return null;
+	}
+	
+	/**
+	 * when question musst be asked
+	 * @return true when obligation - musst be asked
+	 */
+	public boolean isObligation() {
+		return this.obligation;
 	}
 	
 	/**

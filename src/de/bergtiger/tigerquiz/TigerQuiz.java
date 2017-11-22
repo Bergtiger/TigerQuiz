@@ -3,11 +3,13 @@ package de.bergtiger.tigerquiz;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bergtiger.tigerquiz.commands.Commands;
+import de.bergtiger.tigerquiz.listener.MyListenerOverview;
 
 public class TigerQuiz extends JavaPlugin {
 	
 	private SessionOverview sessionOverview;
 	private QuizAdministration quizAdministration;
+	private MyListenerOverview myListenerOverview;
 	private Commands commands;
 	
 	@Override
@@ -16,6 +18,7 @@ public class TigerQuiz extends JavaPlugin {
 		
 		this.sessionOverview = new SessionOverview(this);
 		this.quizAdministration = new QuizAdministration(this);
+		this.myListenerOverview = new MyListenerOverview(this);
 		this.commands = new Commands(this);
 		this.getLogger().info("initialized");
 		
@@ -42,6 +45,14 @@ public class TigerQuiz extends JavaPlugin {
 	 */
 	public QuizAdministration getQuiz() {
 		return this.quizAdministration;
+	}
+	
+	/**
+	 * class with all listeners
+	 * @return
+	 */
+	public MyListenerOverview getListener() {
+		return this.myListenerOverview;
 	}
 	
 	/**

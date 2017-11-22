@@ -5,8 +5,8 @@ import java.util.List;
 
 public class QuestionQuiz extends Question {
 
-	public QuestionQuiz(String title, List<Answer> answers, int size) {
-		super(title, answers, size);
+	public QuestionQuiz(String title, boolean obligation, List<Answer> answers, int size) {
+		super(title, obligation, answers, size);
 	}
 
 	@Override
@@ -32,6 +32,6 @@ public class QuestionQuiz extends Question {
 				answers.add(answer.copy());
 			}
 		}
-		return new QuestionQuiz(this.title, answers, this.size);
+		return new QuestionQuiz(this.title, this.obligation, answers, this.size);
 	}
 }
