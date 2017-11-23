@@ -5,5 +5,6 @@ public enum MyClose {
 	KICK,
 	QUIT,
 	RETURN,
-	WRONG;
+	WRONG,
+	FINISH;
 }

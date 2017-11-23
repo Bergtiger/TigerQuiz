@@ -25,6 +25,7 @@ public class Session {
 	private boolean prefix;
 	private boolean ordered;
 	private boolean oneTimeUse;
+	private boolean close = true; //intern variable to provide or allow inventory close
 	
 	protected Question currentQuestion; //latest question
 	
@@ -147,17 +148,13 @@ public class Session {
 	public void receiveAnswer(int slot) {
 		if(currentQuestion != null) {
 			if(this.currentQuestion.isReturn(slot)) {
-				System.out.println("r1 return");
 				this.exit(MyClose.RETURN);
 			} else {
 				if(this.currentQuestion.hasFunction(slot)) {
-					System.out.println("r2 has function");
 					if(this.currentQuestion.getCorrect(slot)) {
-						System.out.println("r3 next question");
 						this.nextQuestion();
 					} else {
 						//wrong answer - abort
-						System.out.println("r4 wrong answer");
 						this.plugin.getQuiz().savePlayerError(player, this.quizName, this.error++);
 						this.penalty();
 						this.exit(MyClose.WRONG);
@@ -192,7 +189,7 @@ public class Session {
 	 * perform to show next question
 	 */
 	private boolean nextQuestion() {
-		if(currentQuestion != null){
+		if(currentQuestion != null) {
 			//close currentQuestion
 			//TODO WARNING - openInventory forces closeInventory
 			this.closeInventory();
@@ -201,7 +198,7 @@ public class Session {
 		if(this.quizSize < (this.quizMaxSize + this.penaltySize)){
 			//next question
 			Question question = this.getQuestion();
-			if(question != null){
+			if(question != null) {
 				this.player.openInventory(question.getInventory(this.getTitle()));
 				this.currentQuestion = question;
 				this.quizSize++;
@@ -217,6 +214,7 @@ public class Session {
 	
 	private boolean closeInventory() {
 //		this.plugin.getSessions().removeSession(this.player);
+		this.close = false;
 		this.player.closeInventory();
 //		this.plugin.getSessions().addSession(this);
 		return true;
@@ -227,7 +225,7 @@ public class Session {
 	 * @return
 	 */
 	private Question getQuestion() {
-		if(this.questions.size() > this.quizSize) {
+		if(!this.questions.isEmpty()) {
 			return this.questions.remove(0);
 		} else if((this.questionsRest != null) && (!this.questionsRest.isEmpty())) {
 			if(this.ordered) {
@@ -244,12 +242,11 @@ public class Session {
 	 * @return "(x/n)" - ""
 	 */
 	private String getTitle() {
-System.out.println("prefix: " + this.prefix);
 		if(this.prefix)	{
 			if(this.penaltySize > 0) {
-				return "(" + this.quizSize + "/" + this.quizMaxSize + " + " + this.penaltySize + ") " + this.quizName + ": ";
+				return "(" + (this.quizSize + 1) + "/" + this.quizMaxSize + " + " + this.penaltySize + ") " + this.quizName + ": ";
 			} else {
-				return "(" + this.quizSize + "/" + this.quizMaxSize + ") " + this.quizName + ": ";
+				return "(" + (this.quizSize + 1) + "/" + this.quizMaxSize + ") " + this.quizName + ": ";
 			}
 		}
 		return this.quizName + ": ";
@@ -274,6 +271,7 @@ System.out.println("prefix: " + this.prefix);
 		if(this.oneTimeUse) {
 			this.plugin.getQuiz().savePlayer(this.player);
 		}
+		this.exit(MyClose.FINISH);
 	}
 	
 	/**
@@ -281,9 +279,13 @@ System.out.println("prefix: " + this.prefix);
 	 */
 	public void exit(MyClose close) {
 		//TODO
-		if(close != MyClose.CLOSE) {
+		System.out.println("close: " + close);
+		if((close != MyClose.CLOSE) || ((close == MyClose.CLOSE) && this.close)) {
 			this.closeInventory();
 			this.plugin.getSessions().removeSession(this.player);
+		}
+		if(!this.close) {
+			this.close = true;
 		}
 	}
 }

@@ -42,7 +42,7 @@ public class LoadQuiz {
 			this.loadQuizQuestion(session.getQuizName());
 		}
 		if((this.questions != null) && (!this.questions.isEmpty())) {
-			List<Question> questions = this.questions.get(session.getQuizName());
+			List<Question> questions = this.cloneQuestions(this.questions.get(session.getQuizName()));
 			if(questions != null) {
 				List<Question> questionhauptfragen = new ArrayList<Question>(); //fragen die standartmäßig gestellt werden
 				//fragen die beantwortet werden müssen
@@ -80,6 +80,17 @@ public class LoadQuiz {
 			}
 		}
 		return false;
+	}
+	
+	private List<Question> cloneQuestions(List<Question> args) {
+		if((args != null) && (!args.isEmpty())) {
+			List<Question> questions = new ArrayList<Question>();
+			for(Question question: args) {
+				questions.add(question.copy());
+			}
+			return questions;
+		}
+		return null;
 	}
 	
 	/** 
@@ -148,7 +159,7 @@ public class LoadQuiz {
 			if(cfg.contains("Ordered")) {
 				String args = cfg.getString("Ordered");
 				if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
-					showProgress = cfg.getBoolean("Ordered");
+					ordered = cfg.getBoolean("Ordered");
 				} else {
 					this.plugin.getLogger().info("wrong argument Ordered: " + cfg.getString("Ordered"));
 					return;
@@ -157,7 +168,7 @@ public class LoadQuiz {
 			if(cfg.contains("oneTimeUse")) {
 				String args = cfg.getString("oneTimeUse");
 				if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
-					showProgress = cfg.getBoolean("oneTimeUse");
+					oneTimeUse = cfg.getBoolean("oneTimeUse");
 				} else {
 					this.plugin.getLogger().info("wrong argument oneTimeUse: " + cfg.getString("oneTimeUse"));
 					return;
@@ -372,7 +383,6 @@ public class LoadQuiz {
 					this.plugin.getLogger().info("Answers is Empty - Question (" + question + ") will be ignored");
 				}
 			}
-			System.out.println("questionsAll" + questionsAll);
 			if(!questionsAll.isEmpty()) {
 				this.questions.put(quiz, questionsAll);
 			} else {
