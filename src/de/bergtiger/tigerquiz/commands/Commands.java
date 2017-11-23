@@ -94,19 +94,24 @@ public class Commands implements CommandExecutor{
 			//getQuiz
 			if(!this.plugin.getSessions().hasSession(p)) {
 				Session session = this.plugin.getQuiz().load().loadQuiz(quiz);
-				if(session.getOneTimeUse() && this.plugin.getQuiz().load().checkQuizPlayer(quiz, p)) {
-					//has done
-					if(cs.getName().equalsIgnoreCase(p.getName())) {
-						cs.sendMessage(MyString.QUIZ_DONE_SELF.colored().replace("-quiz-", quiz));
+				if(session != null) {
+					if(session.getOneTimeUse() && this.plugin.getQuiz().load().checkQuizPlayer(quiz, p)) {
+						//has done
+						if(cs.getName().equalsIgnoreCase(p.getName())) {
+							cs.sendMessage(MyString.QUIZ_DONE_SELF.colored().replace("-quiz-", quiz));
+						} else {
+							cs.sendMessage(MyString.QUIZ_DONE_OTHER.colored().replace("-quiz-", quiz).replace("-player-", p.getName()));
+						}
 					} else {
-						cs.sendMessage(MyString.QUIZ_DONE_OTHER.colored().replace("-quiz-", quiz).replace("-player-", p.getName()));
+						//startQuiz
+						int error = this.plugin.getQuiz().load().getQuizPlayerError(quiz, p);
+						session.setPlayer(p, error);
+						this.plugin.getQuiz().load().loadQuizQuestions(session); //multiply returns
+						this.plugin.getSessions().startSession(session);
 					}
 				} else {
-					//startQuiz
-					int error = this.plugin.getQuiz().load().getQuizPlayerError(quiz, p);
-					session.setPlayer(p, error);
-					this.plugin.getQuiz().load().loadQuizQuestions(session); //multiply returns
-					this.plugin.getSessions().startSession(session);
+					//noQuiz
+					cs.sendMessage(MyString.NOQUIZ.colored().replace("-quiz-", quiz).replace("-quiz-", quiz));
 				}
 			} else {
 				//has session
@@ -125,7 +130,7 @@ public class Commands implements CommandExecutor{
 	private void list(CommandSender cs, String[] args) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_LIST.get())) {
 			//tigerquiz list(0) [quiz/question/answer](1) [quiz](2) [question](3)
-			if(args.length >= 3) {
+			if(args.length >= 2) {
 				switch(args[1].toLowerCase()) {
 				case "quiz"		: this.listQuiz(cs); break;
 				case "question"	: if(args.length >= 3) this.listQuestion(cs, args[2]); break;
@@ -168,7 +173,7 @@ public class Commands implements CommandExecutor{
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_QUESTION.get())) {
 			if(this.plugin.getQuiz().isQuiz(quiz)) {
 				List<String> questions = this.plugin.getQuiz().getQuestions(quiz);
-				cs.sendMessage(MyString.QUIZ_LIST_HEAD_QUESTION.colored());
+				cs.sendMessage(MyString.QUIZ_LIST_HEAD_QUESTION.colored().replace("-quiz-", quiz));
 				if((questions != null) && (!questions.isEmpty())) {
 					for(String args : questions) {
 						cs.sendMessage(MyString.QUIZ_LIST_LIST.colored().replace("-list-", args));
@@ -177,7 +182,7 @@ public class Commands implements CommandExecutor{
 					cs.sendMessage(MyString.QUIZ_LIST_EMPTY.colored());
 				}
 			} else {
-				cs.sendMessage(MyString.NOQUIZ.colored());
+				cs.sendMessage(MyString.NOQUIZ.colored().replace("-quiz-", quiz));
 			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());
@@ -195,7 +200,7 @@ public class Commands implements CommandExecutor{
 			if(this.plugin.getQuiz().isQuiz(quiz)) {
 				if(this.plugin.getQuiz().isQuestion(quiz, question)) {
 					List<String> answers = this.plugin.getQuiz().getAnswers(quiz, question);
-					cs.sendMessage(MyString.QUIZ_LIST_HEAD_ANSWER.colored());
+					cs.sendMessage(MyString.QUIZ_LIST_HEAD_ANSWER.colored().replace("-quiz-", quiz).replace("-question-", question));
 					if((answers != null) && (!answers.isEmpty())) {
 						for(String args : answers) {
 							cs.sendMessage(MyString.QUIZ_LIST_LIST.colored().replace("-list-", args));
@@ -204,10 +209,10 @@ public class Commands implements CommandExecutor{
 						cs.sendMessage(MyString.QUIZ_LIST_EMPTY.colored());
 					}
 				} else {
-					cs.sendMessage(MyString.NOQUESTION.colored());
+					cs.sendMessage(MyString.NOQUESTION.colored().replace("-quiz-", quiz).replace("-question-", question));
 				}
 			} else {
-				cs.sendMessage(MyString.NOQUIZ.colored());
+				cs.sendMessage(MyString.NOQUIZ.colored().replace("-quiz-", quiz));
 			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());

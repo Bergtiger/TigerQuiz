@@ -140,12 +140,22 @@ public class Session {
 	 */
 	public void receiveAnswer(int slot) {
 		if(currentQuestion != null) {
-			if(this.currentQuestion.getCorrect(slot)) {
-				this.nextQuestion();
-			} else {
-				//wrong answer - abort
+			if(this.currentQuestion.isReturn(slot)) {
+				System.out.println("r1 return");
 				this.exit();
-				this.plugin.getQuiz().savePlayerError(player, this.quizName, this.error + 1);
+			} else {
+				if(this.currentQuestion.hasFunction(slot)) {
+					System.out.println("r2 has function");
+					if(this.currentQuestion.getCorrect(slot)) {
+						System.out.println("r3 next question");
+						this.nextQuestion();
+					} else {
+						//wrong answer - abort
+						System.out.println("r4 wrong answer");
+						this.exit();
+						this.plugin.getQuiz().savePlayerError(player, this.quizName, this.error + 1);
+					}
+				}
 			}
 		}
 	}
@@ -196,7 +206,7 @@ public class Session {
 	 * @return
 	 */
 	private Question getQuestion() {
-		if(this.questions.size() < this.quizSize) {
+		if(this.questions.size() > this.quizSize) {
 			return this.questions.remove(0);
 		} else if((this.questionsRest != null) && (!this.questionsRest.isEmpty())) {
 			if(this.ordered) {
@@ -213,6 +223,7 @@ public class Session {
 	 * @return "(x/n)" - ""
 	 */
 	private String getTitle() {
+System.out.println("prefix: " + this.prefix);
 		if(this.prefix)	return "(" + this.quizSize + "/" + this.quizMaxSize + ") " + this.quizName + ": ";
 		return this.quizName + ": ";
 	}
@@ -229,7 +240,7 @@ public class Session {
 	 */
 	private void end() {
 		for(String args : this.reward) {
-			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args);
+			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args.replace("-player-", this.player.getName()));
 		}
 		//save player
 		if(this.oneTimeUse) {
@@ -243,5 +254,6 @@ public class Session {
 	public void exit() {
 		//TODO
 		this.closeInventory();
+		this.plugin.getSessions().removeSession(this.player);
 	}
 }

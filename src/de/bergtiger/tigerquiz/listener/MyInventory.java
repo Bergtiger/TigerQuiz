@@ -21,10 +21,9 @@ public class MyInventory extends MyListener {
 		Player p = (Player) e.getWhoClicked();
 		if(this.plugin.getSessions().hasSession(p)){
 			if(e.getClickedInventory() != null){
-				if((e.getSlot() == e.getRawSlot()) && ((e.getCurrentItem() != null) && (e.getCurrentItem().getType() != Material.AIR))){	//itemslot not playerinventory and item not air
+				e.setCancelled(true);
+				if((e.getSlot() == e.getRawSlot()) && ((e.getCurrentItem() != null) && (e.getCurrentItem().getType() != Material.AIR))){	//itemslot not playerinventory and item not air				
 					this.plugin.getSessions().getSession(p).receiveAnswer(e.getRawSlot());
-				} else {
-					e.setCancelled(true);
 				}
 			}
 		}

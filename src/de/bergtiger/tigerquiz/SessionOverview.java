@@ -26,6 +26,7 @@ public class SessionOverview {
 			this.sessions.put(session.getPlayer().getName(), session);
 			//getQuestions
 			session.start();
+			this.plugin.getListener().aktivate();
 			return true;
 		} else {
 			this.plugin.getLogger().info("Could not start Quiz. Did you check the player session before?");
@@ -52,7 +53,7 @@ public class SessionOverview {
 	 */
 	public Session getSession(Player p) {
 		if((this.sessions != null) && (!this.sessions.isEmpty())) {
-			return this.sessions.get(p);
+			return this.sessions.get(p.getName());
 		}
 		return null;
 	}
@@ -65,6 +66,9 @@ public class SessionOverview {
 	public boolean removeSession(Player p) {
 		if((this.sessions != null) && (!this.sessions.isEmpty())) {
 			if(this.sessions.remove(p.getName()) != null) {
+				if(this.sessions.isEmpty()) {
+					this.plugin.getListener().deaktivate();
+				}
 				return true;
 			}
 		}

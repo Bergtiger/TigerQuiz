@@ -11,11 +11,13 @@ public class TigerQuiz extends JavaPlugin {
 	private QuizAdministration quizAdministration;
 	private MyListenerOverview myListenerOverview;
 	private Commands commands;
+	private Config config;
 	
 	@Override
 	public void onEnable() {
 		this.getLogger().info("starting");
 		
+		this.config = new Config(this);
 		this.sessionOverview = new SessionOverview(this);
 		this.quizAdministration = new QuizAdministration(this);
 		this.myListenerOverview = new MyListenerOverview(this);

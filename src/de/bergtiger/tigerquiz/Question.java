@@ -3,7 +3,12 @@ package de.bergtiger.tigerquiz;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import de.bergtiger.tigerquiz.data.MyString;
 
 /** @author Bergtiger
  */
@@ -42,9 +47,22 @@ public abstract class Question {
 				Answer answer = this.answers.get(i);
 				inventory.setItem(answer.getSlot(), answer.getItem());
 			}
+			inventory.setItem(inventory.getSize() - 1, this.getReturn());
 			return inventory;
 		}
 		return null;
+	}
+	
+	/**
+	 * return item
+	 * @return
+	 */
+	private ItemStack getReturn() {
+		ItemStack item = new ItemStack(Material.CONCRETE, 1, (short)14); //red concrete
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(MyString.setColor("&4Return/Zurück"));
+		item.setItemMeta(meta);
+		return item;
 	}
 	
 	/**
@@ -60,8 +78,17 @@ public abstract class Question {
 	 * @param slot
 	 * @return true if return, false else
 	 */
-	public boolean isReturn(int slot){
+	public boolean isReturn(int slot) {
 		return (slot == (Math.max(1, 9 * this.size) - 1)) ? true : false;
+	}
+	
+	public boolean hasFunction(int slot) {
+		for(Answer answer : this.answers) {
+			if(answer.slot == slot) {
+				return answer.hasFunction();
+			}
+		}
+		return false;
 	}
 	
 	/**

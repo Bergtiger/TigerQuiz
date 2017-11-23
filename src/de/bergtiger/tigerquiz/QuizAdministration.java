@@ -30,7 +30,7 @@ public class QuizAdministration {
 	 * @return
 	 */
 	public boolean isQuiz(String quiz) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) return true;
 		return false;
 	}
@@ -42,7 +42,7 @@ public class QuizAdministration {
 	 * @return
 	 */
 	public boolean isQuestion(String quiz, String question) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			//quiz musst be existend
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
@@ -59,7 +59,7 @@ public class QuizAdministration {
 	 * @return
 	 */
 	public boolean isAnswer(String quiz, String question, String answer) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			//quiz musst be existend
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
@@ -80,7 +80,7 @@ public class QuizAdministration {
 	 * @return
 	 */
 	public boolean addQuiz(String quiz, int size, boolean showProgress, boolean ordered, boolean oneTimeUse) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(!file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			
@@ -112,7 +112,7 @@ public class QuizAdministration {
 	 * @return
 	 */
 	public boolean addQuestion(String quiz, String question, int size, String function) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			String prefix = "Question." + question + ".";
@@ -149,7 +149,7 @@ public class QuizAdministration {
 	 * @return true if it could save
 	 */
 	public boolean addAnswer(String quiz, String question, String answer, boolean function, boolean correct, String name, List<String> lore, String material, byte data, List<String> enchantment, int posX, int posY) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			//quiz musst be existend
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
@@ -192,7 +192,7 @@ public class QuizAdministration {
 	 */
 	@Warning
 	public boolean deleteQuiz(String quiz) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz);
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz);
 		if(file.exists() && file.isDirectory()) {
 			file.delete();
 		}
@@ -206,7 +206,7 @@ public class QuizAdministration {
 	 * @return
 	 */
 	public boolean deleteQuestion(String quiz, String question) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			
@@ -236,7 +236,7 @@ public class QuizAdministration {
 	 * @return
 	 */
 	public boolean deleteAnswer(String quiz, String question, String answer) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			
@@ -263,7 +263,7 @@ public class QuizAdministration {
 	 * @return a List of all quiz (title/id) - else null
 	 */
 	public List<String> getQuizes() {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz");
 		if(file.exists() && file.isDirectory()) {
 			List<String> files = new ArrayList<String>();
 			for(String args : file.list()) {
@@ -282,7 +282,7 @@ public class QuizAdministration {
 	 * @return a List of all questions of a quiz (title/id) - else null
 	 */
 	public List<String> getQuestions(String quiz) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			if(cfg.contains("Question")) {
@@ -303,7 +303,7 @@ public class QuizAdministration {
 	 * @return a List of all answers of a question (title/id) - else null
 	 */
 	public List<String> getAnswers(String quiz, String question) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			if(cfg.contains("Question." + question + ".Answer")) {
@@ -322,7 +322,7 @@ public class QuizAdministration {
 	}
 	
 	public boolean savePlayerError(Player player, String quiz, int error) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "errors.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/errors.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			if(cfg.contains(player.getUniqueId().toString())){

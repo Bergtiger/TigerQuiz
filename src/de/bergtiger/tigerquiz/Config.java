@@ -6,6 +6,10 @@ public class Config {
 	
 	private TigerQuiz plugin;
 	
+	public Config(TigerQuiz plugin) {
+		this.plugin = plugin;
+	}
+	
 	/**
 	 * loads quiz
 	 * @param quiz - name/id of quiz

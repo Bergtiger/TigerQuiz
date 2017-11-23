@@ -16,11 +16,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.bergtiger.tigerquiz.data.MyString;
+
 public class LoadQuiz {
 
 	private TigerQuiz plugin;
-	private HashMap<String, Session> quizzes;
-	private HashMap<String, List<Question>> questions;
+	private HashMap<String, Session> quizzes = new HashMap<String, Session>();
+	private HashMap<String, List<Question>> questions = new HashMap<String, List<Question>>();
 	
 	
 	public LoadQuiz(TigerQuiz plugin) {
@@ -36,11 +38,11 @@ public class LoadQuiz {
 	}
 	
 	public boolean loadQuizQuestions(Session session) {
+		if((this.questions == null) || ((this.questions != null) && (!this.questions.containsKey(session.getQuizName())))) {
+			this.loadQuizQuestion(session.getQuizName());
+		}
 		if((this.questions != null) && (!this.questions.isEmpty())) {
-			if(!this.questions.containsKey(session.getQuizName())) {
-				this.loadQuizQuestion(session.getQuizName());
-			}
-			List<Question> questions = this.newQuizQuestion(session.getQuizName());
+			List<Question> questions = this.questions.get(session.getQuizName());
 			if(questions != null) {
 				List<Question> questionhauptfragen = new ArrayList<Question>(); //fragen die standartmäßig gestellt werden
 				//fragen die beantwortet werden müssen
@@ -85,6 +87,7 @@ public class LoadQuiz {
 	 * @param quiz
 	 * @return
 	 */
+	@Deprecated
 	private List<Question> newQuizQuestion(String quiz) {
 		List<Question> questions = this.questions.get(quiz);
 		if((questions != null) && (questions.isEmpty())) {
@@ -114,7 +117,7 @@ public class LoadQuiz {
 	 * @param quiz
 	 */
 	private void loadQuizConfig(String quiz) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			
@@ -125,14 +128,11 @@ public class LoadQuiz {
 			List<String> reward = null;
 			
 			if(cfg.contains("Size")) {
-				String args = cfg.getString("Size");
-				if(!args.equalsIgnoreCase("autosize")){
-					try {
-						size = Integer.valueOf(size);
-					} catch (Exception e) {
-						this.plugin.getLogger().info("wrong argument Size: " + args);
-						return;
-					}
+				try {
+					size = Integer.valueOf(cfg.getString("Size"));
+				} catch (Exception e) {
+					this.plugin.getLogger().info("wrong argument Size: " + cfg.getString("Size"));
+					return;
 				}
 			}
 			if(cfg.contains("showProgress")) {
@@ -176,7 +176,7 @@ public class LoadQuiz {
 	 * @return -1 if nothing there
 	 */
 	public int getQuizPlayerError(String quiz, Player player) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "errors.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/errors.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			if(cfg.contains(player.getUniqueId().toString())){
@@ -193,7 +193,7 @@ public class LoadQuiz {
 	 * @return
 	 */
 	public boolean checkQuizPlayer(String quiz, Player player) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "errors.txt");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/errors.txt");
 		if(file.exists()) {
 			//uuid:name
 		}
@@ -201,7 +201,7 @@ public class LoadQuiz {
 	}
 	
 	private void loadQuizQuestion(String quiz) {
-		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz + "config.yml");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			
@@ -226,7 +226,6 @@ public class LoadQuiz {
 						this.plugin.getLogger().info("wrong argument Obligation: " + cfg.getString("Question." + question + ".Obligation") + " using false as default");
 					}
 				}
-				
 				if(cfg.contains("Question." + question + ".Size")) {
 					String args = cfg.getString("Question." + question + ".Size");
 					if(!args.equalsIgnoreCase("autosize")){
@@ -237,16 +236,14 @@ public class LoadQuiz {
 						}
 					}
 				}
-				
 				if(cfg.contains("Question." + question + ".Survey")) {
-					String args = cfg.getString("Question." + question + ".Function");
+					String args = cfg.getString("Question." + question + ".Survey");
 					if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
 						survey = cfg.getBoolean("Question." + question + ".Survey");
 					} else {
 						this.plugin.getLogger().info("wrong argument Survey: " + cfg.getString("Question." + question + ".Survey") + " using false as default");
 					}
 				}
-				
 				//load answers
 				if(cfg.contains("Question." + question + ".Answer")) {
 					Iterator<String> iAnswer = cfg.getConfigurationSection("Question." + question + ".Answer").getKeys(false).iterator();
@@ -262,81 +259,81 @@ public class LoadQuiz {
 						int posX = 0;
 						int posY = 0;
 					
-						int position = (9 * posY) + posX;
+						int position = 0;
 					
 						//load answer
-
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "Text")) {
-							name = cfg.getString("Question." + question + ".Answer." + answerID + "Text");
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".Text")) {
+							name = cfg.getString("Question." + question + ".Answer." + answerID + ".Text");
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "Function")) {
-							String args = cfg.getString("Question." + question + ".Answer." + answerID + "Function");
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".Function")) {
+							String args = cfg.getString("Question." + question + ".Answer." + answerID + ".Function");
 							if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
-								function = cfg.getBoolean("Question." + question + ".Answer." + answerID + "Function");
+								function = cfg.getBoolean("Question." + question + ".Answer." + answerID + ".Function");
 							} else {
-								this.plugin.getLogger().info("wrong argument Function: " + cfg.getString("Question." + question + ".Answer." + answerID + "Function") + " using false as default");
+								this.plugin.getLogger().info("wrong argument Function: " + cfg.getString("Question." + question + ".Answer." + answerID + ".Function") + " using false as default");
 							}
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "Correct")) {
-							String args = cfg.getString("Question." + question + ".Answer." + answerID + "Correct");
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".Correct")) {
+							String args = cfg.getString("Question." + question + ".Answer." + answerID + ".Correct");
 							if(args.equalsIgnoreCase("true") || args.equalsIgnoreCase("false")){
-								correct = cfg.getBoolean("Question." + question + ".Answer." + answerID + "Correct");
+								correct = cfg.getBoolean("Question." + question + ".Answer." + answerID + ".Correct");
 							} else {
-								this.plugin.getLogger().info("wrong argument Correct: " + cfg.getString("Question." + question + ".Answer." + answerID + "Correct") + " using false as default");
+								this.plugin.getLogger().info("wrong argument Correct: " + cfg.getString("Question." + question + ".Answer." + answerID + ".Correct") + " using false as default");
 							}
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "Data")) {
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".Data")) {
 							try {
-								data = Byte.valueOf(cfg.getString("Question." + question + ".Answer." + answerID + "Data"));
+								data = Byte.valueOf(cfg.getString("Question." + question + ".Answer." + answerID + ".Data"));
 							} catch (NumberFormatException e) {
-								this.plugin.getLogger().info("wrong argument Data: " + cfg.getString("Question." + question + ".Answer." + answerID + "Data") + " using 0 as default");
+								this.plugin.getLogger().info("wrong argument Data: " + cfg.getString("Question." + question + ".Answer." + answerID + ".Data") + " using 0 as default");
 							}
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "Lore")) {
-							lore = cfg.getStringList("Question." + question + ".Answer." + answerID + "Lore");
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".Lore")) {
+							lore = cfg.getStringList("Question." + question + ".Answer." + answerID + ".Lore");
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "Material")) {
-							material = cfg.getString("Question." + question + ".Answer." + answerID + "Material");
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".Material")) {
+							material = cfg.getString("Question." + question + ".Answer." + answerID + ".Material");
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "Enchantment")) {
-							enchantment = cfg.getStringList("Question." + question + ".Answer." + answerID + "Enchantment");
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".Enchantment")) {
+							enchantment = cfg.getStringList("Question." + question + ".Answer." + answerID + ".Enchantment");
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "posX")) {
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".posX")) {
 							try {
-								posX = Integer.valueOf("Question." + question + ".Answer." + answerID + "posX");
+								posX = Integer.valueOf(cfg.getString("Question." + question + ".Answer." + answerID + ".posX"));
 							} catch (Exception e) {
-								this.plugin.getLogger().info("wrong argument posX: " + posX + " using 0 as default");
+								this.plugin.getLogger().info("wrong argument posX: " + cfg.getString("Question." + question + ".Answer." + answerID + ".posX") + " using 0 as default");
 							}
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "posY")) {
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".posY")) {
 							try {
-								posY = Integer.valueOf("Question." + question + ".Answer." + answerID + "posY");
+								posY = Integer.valueOf(cfg.getString("Question." + question + ".Answer." + answerID + ".posY"));
 							} catch (Exception e) {
-								this.plugin.getLogger().info("wrong argument posY: " + posY + " using 0 as default");
+								this.plugin.getLogger().info("wrong argument posY: " + cfg.getString("Question." + question + ".Answer." + answerID + ".posY") + " using 0 as default");
 							}
 						}
 						
-						if(cfg.contains("Question." + question + ".Answer." + answerID + "pos")) {
+						position = (9 * posY) + posX;
+						
+						if(cfg.contains("Question." + question + ".Answer." + answerID + ".pos")) {
 							try {
-								position = Integer.valueOf("Question." + question + ".Answer." + answerID + "pos");
+								position = Integer.valueOf(cfg.getString("Question." + question + ".Answer." + answerID + ".pos"));
 							} catch (Exception e) {
-								this.plugin.getLogger().info("wrong argument posX: " + position + " using 0 as default");
+								this.plugin.getLogger().info("wrong argument posX: " + cfg.getString("Question." + question + ".Answer." + answerID + ".pos") + " using 0 as default");
 							}
 						}
-						
 						//get item
 					
 						ItemStack item = this.getItem(name, lore, this.getMaterial(material), data, this.getEnchantment(enchantment));
 					
-						if((position > 0) && (item != null)) {
+						if((position >= 0) && (item != null)) {
 							Answer answer = new Answer(position, item, function, correct);
 							if(answer != null) {
 								answers.add(answer);
@@ -360,6 +357,7 @@ public class LoadQuiz {
 					this.plugin.getLogger().info("Answers is Empty - Question (" + question + ") will be ignored");
 				}
 			}
+			System.out.println("questionsAll" + questionsAll);
 			if(!questionsAll.isEmpty()) {
 				this.questions.put(quiz, questionsAll);
 			} else {
@@ -381,9 +379,12 @@ public class LoadQuiz {
 			ItemStack item = new ItemStack(material, 1, data);
 			ItemMeta meta = item.getItemMeta();
 			if(name != null) {
-				meta.setDisplayName(name);
+				meta.setDisplayName(MyString.setColor(name));
 			}
 			if((lore != null) && (!lore.isEmpty())){
+				for(int i = 0; i < lore.size(); i++) {
+					lore.set(i, MyString.setColor(lore.get(i)));
+				}
 				meta.setLore(lore);
 			}
 			if((enchantment != null) && (!enchantment.isEmpty())) {
