@@ -1,21 +1,26 @@
 package de.bergtiger.tigerquiz;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import de.bergtiger.tigerquiz.data.MyClose;
 
 public class Session {
 
 	private TigerQuiz plugin;
 	private String quizName;
 	private Player player;
-	protected List<Question> questions; //normal questions
-	protected List<Question> questionsRest; //questions which will be used when spezial error behavior (quizlength++)
-	protected List<String> reward;
+	private List<Question> questions; //normal questions
+	private List<Question> questionsRest; //questions which will be used when spezial error behavior (quizlength++)
+	private List<String> reward;
+	private HashMap<Integer, List<String>> penalties;
 	private int quizSize = 0;
 	private int quizMaxSize;
+	private int penaltySize = 0;
 	private int error = 0;
 	private boolean prefix;
 	private boolean ordered;
@@ -23,7 +28,7 @@ public class Session {
 	
 	protected Question currentQuestion; //latest question
 	
-	public Session(TigerQuiz plugin, String quizName, int quizMaxSize, boolean prefix, boolean ordered, boolean oneTimeUse, List<String> reward) {
+	public Session(TigerQuiz plugin, String quizName, int quizMaxSize, boolean prefix, boolean ordered, boolean oneTimeUse, List<String> reward, HashMap<Integer, List<String>> penalties) {
 		this.plugin = plugin;
 		this.quizName = quizName;
 		this.quizMaxSize = quizMaxSize;
@@ -31,6 +36,7 @@ public class Session {
 		this.ordered = ordered;
 		this.oneTimeUse = oneTimeUse;
 		this.reward = reward;
+		this.penalties = penalties;
 	}
 	
 	/**
@@ -131,7 +137,7 @@ public class Session {
 				questions.add(question.copy());
 			}
 		}
-		return new Session(this.plugin, this.quizName, this.quizMaxSize, this.prefix, this.ordered, this.oneTimeUse, this.reward);
+		return new Session(this.plugin, this.quizName, this.quizMaxSize, this.prefix, this.ordered, this.oneTimeUse, this.reward, this.penalties);
 	}
 	
 	/**
@@ -142,7 +148,7 @@ public class Session {
 		if(currentQuestion != null) {
 			if(this.currentQuestion.isReturn(slot)) {
 				System.out.println("r1 return");
-				this.exit();
+				this.exit(MyClose.RETURN);
 			} else {
 				if(this.currentQuestion.hasFunction(slot)) {
 					System.out.println("r2 has function");
@@ -152,10 +158,25 @@ public class Session {
 					} else {
 						//wrong answer - abort
 						System.out.println("r4 wrong answer");
-						this.exit();
-						this.plugin.getQuiz().savePlayerError(player, this.quizName, this.error + 1);
+						this.plugin.getQuiz().savePlayerError(player, this.quizName, this.error++);
+						this.penalty();
+						this.exit(MyClose.WRONG);
 					}
 				}
+			}
+		}
+	}
+	
+	/**
+	 * error behavior
+	 * list of commands
+	 */
+	private void penalty() {
+		if((this.penalties != null) && (!this.penalties.isEmpty())) {
+			List<String> penalties = this.penalties.get(this.error);
+			for(String args : penalties) {
+				//intern penalties
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args.replace("-player-", this.player.getName()));
 			}
 		}
 	}
@@ -164,7 +185,7 @@ public class Session {
 	 * spezial error behavior
 	 */
 	public void penaltyQuestion() {
-		this.quizMaxSize++;
+		this.penaltySize++;
 	}
 	
 	/**
@@ -177,7 +198,7 @@ public class Session {
 			this.closeInventory();
 		}
 		//open new Question
-		if(this.quizSize < this.quizMaxSize){
+		if(this.quizSize < (this.quizMaxSize + this.penaltySize)){
 			//next question
 			Question question = this.getQuestion();
 			if(question != null){
@@ -195,9 +216,9 @@ public class Session {
 	}
 	
 	private boolean closeInventory() {
-		this.plugin.getSessions().removeSession(this.player);
+//		this.plugin.getSessions().removeSession(this.player);
 		this.player.closeInventory();
-		this.plugin.getSessions().addSession(this);
+//		this.plugin.getSessions().addSession(this);
 		return true;
 	}
 	
@@ -224,7 +245,13 @@ public class Session {
 	 */
 	private String getTitle() {
 System.out.println("prefix: " + this.prefix);
-		if(this.prefix)	return "(" + this.quizSize + "/" + this.quizMaxSize + ") " + this.quizName + ": ";
+		if(this.prefix)	{
+			if(this.penaltySize > 0) {
+				return "(" + this.quizSize + "/" + this.quizMaxSize + " + " + this.penaltySize + ") " + this.quizName + ": ";
+			} else {
+				return "(" + this.quizSize + "/" + this.quizMaxSize + ") " + this.quizName + ": ";
+			}
+		}
 		return this.quizName + ": ";
 	}
 	
@@ -232,6 +259,7 @@ System.out.println("prefix: " + this.prefix);
 	 * starts first Question
 	 */
 	public void start() {
+		//old penalties ?
 		this.nextQuestion();
 	}
 	
@@ -251,9 +279,11 @@ System.out.println("prefix: " + this.prefix);
 	/**
 	 * ends session immediately
 	 */
-	public void exit() {
+	public void exit(MyClose close) {
 		//TODO
-		this.closeInventory();
-		this.plugin.getSessions().removeSession(this.player);
+		if(close != MyClose.CLOSE) {
+			this.closeInventory();
+			this.plugin.getSessions().removeSession(this.player);
+		}
 	}
 }

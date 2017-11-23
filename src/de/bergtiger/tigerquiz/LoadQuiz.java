@@ -126,6 +126,7 @@ public class LoadQuiz {
 			boolean ordered = true;
 			boolean oneTimeUse = false;
 			List<String> reward = null;
+			HashMap<Integer, List<String>> penalties = null; 
 			
 			if(cfg.contains("Size")) {
 				try {
@@ -165,7 +166,21 @@ public class LoadQuiz {
 			if(cfg.contains("Reward")) {
 				reward = cfg.getStringList("Reward");
 			}
-			this.quizzes.put(quiz, new Session(this.plugin, quiz, size, showProgress, ordered, oneTimeUse, reward));
+			if(cfg.contains("Penalty")) {
+				penalties = new HashMap<Integer, List<String>>();
+				Iterator<String> p = cfg.getConfigurationSection("Penalty").getKeys(false).iterator();
+				while(p.hasNext()) {
+					String penalty = p.next();
+					List<String> commands = cfg.getStringList("Penalty." + penalty);
+					try {
+						penalties.put(Integer.valueOf(penalty), commands);
+					} catch (NumberFormatException e) {
+						this.plugin.getLogger().info("wrong argument Penalty: " + penalty + " not a number");
+						return;
+					}
+				}
+			}
+			this.quizzes.put(quiz, new Session(this.plugin, quiz, size, showProgress, ordered, oneTimeUse, reward, penalties));
 		}
 	}
 	

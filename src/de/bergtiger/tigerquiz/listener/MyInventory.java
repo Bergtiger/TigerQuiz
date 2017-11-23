@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.bergtiger.tigerquiz.TigerQuiz;
+import de.bergtiger.tigerquiz.data.MyClose;
 
 public class MyInventory extends MyListener {
 
@@ -32,26 +33,26 @@ public class MyInventory extends MyListener {
 	//abbruch
 	@EventHandler
 	public void onClose(InventoryCloseEvent e) {
-		this.exit((Player) e.getPlayer());
+		this.exit((Player) e.getPlayer(), MyClose.CLOSE);
 	}
 
 	@EventHandler
 	public void onKick(PlayerKickEvent e) {
-		this.exit((Player) e.getPlayer());
+		this.exit((Player) e.getPlayer(), MyClose.KICK);
 	}
 	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
-		this.exit((Player) e.getPlayer());
+		this.exit((Player) e.getPlayer(), MyClose.QUIT);
 	}
 	
 	/**
 	 * 
 	 * @param p - player to end session
 	 */
-	private void exit(Player p) {
+	private void exit(Player p, MyClose close) {
 		if(this.plugin.getSessions().hasSession(p)) {
-			this.plugin.getSessions().getSession(p).exit();
+			this.plugin.getSessions().getSession(p).exit(close);
 		}
 	}
 }
