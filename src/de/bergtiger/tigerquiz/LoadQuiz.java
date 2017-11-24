@@ -270,18 +270,30 @@ public class LoadQuiz {
 	 * Delete a Session on hashmap
 	 * @param key key of Session on hashmap 
 	 */
-	public void deleteSessionOnHashmap(String key) {
-		if(!quizzes.isEmpty() && quizzes.containsKey(key)) {
-			//find session which key contains
-			Session evtSession = quizzes.get(key);
-			String quizname = evtSession.getQuizname();
-			QuizAdministration adm = new QuizAdministration(plugin);
-			//delete quizfile
-			adm.deleteQuiz(quizname);
-			//remove the session on hashmap
+	public boolean deleteSessionOnHashmap(String quizname) {
+		//check that quiz exists
+		if(plugin.getQuiz().isQuiz(quizname)) {
+			String key = getKeyQuiz(quizname);
 			quizzes.remove(key);
-			plugin.getLogger().info("The Session with key (" + 
-					key + ") is deleted");
+			return true;
 		}
+		return false;
+	}
+	/**
+	 * finde a key of object on Hashmap
+	 * @param obj String name of object
+	 * @return key 
+	 */
+	private String getKeyQuiz(String obj) {
+		if(!quizzes.isEmpty()) {
+			//check every key on Map
+			for(String key : quizzes.keySet()) {
+				//if object of key is equals to obj, return key
+				if(quizzes.get(key).equals(obj)) {
+					return key;
+				}
+			}
+		}
+		return null;
 	}
 }
