@@ -62,7 +62,7 @@ public class Session {
 	public boolean setPlayer(Player player, int error) {
 		if(this.player == null) {
 			this.player = player;
-			this.error = error;
+			this.error = Math.max(0, error);
 			return true;
 		}
 		return false;
@@ -155,7 +155,8 @@ public class Session {
 						this.nextQuestion();
 					} else {
 						//wrong answer - abort
-						this.plugin.getQuiz().savePlayerError(player, this.quizName, this.error++);
+						this.error++;
+						this.plugin.getQuiz().savePlayerError(player, this.quizName, this.error);
 						this.penalty();
 						this.exit(MyClose.WRONG);
 					}

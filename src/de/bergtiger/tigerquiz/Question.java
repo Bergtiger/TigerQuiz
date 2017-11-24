@@ -42,7 +42,7 @@ public abstract class Question {
 	public Inventory getInventory(String prefix){
 		if((this.answers != null) && (!this.answers.isEmpty())) {
 			//autorezise
-			Inventory inventory = Bukkit.createInventory(null, Math.max(1, 9 * this.size), prefix + this.title);
+			Inventory inventory = Bukkit.createInventory(null, Math.max(1, 9 * this.size), prefix + this.title);			
 			for (int i = 0; i < this.answers.size(); i++) {
 				Answer answer = this.answers.get(i);
 				inventory.setItem(answer.getSlot(), answer.getItem());

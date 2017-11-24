@@ -256,7 +256,7 @@ public class LoadQuiz {
 					String args = cfg.getString("Question." + question + ".Size");
 					if(!args.equalsIgnoreCase("autosize")){
 						try {
-							size = Integer.valueOf(size);
+							size = Integer.valueOf(args);
 						} catch (Exception e) {
 							this.plugin.getLogger().info("wrong argument Size: " + args + " using autosize as default");
 						}
@@ -369,7 +369,6 @@ public class LoadQuiz {
 				}
 				//resize
 				size = this.resize(size, answers);
-				
 				//create Question
 				if(!answers.isEmpty()) {
 					if(survey) {
