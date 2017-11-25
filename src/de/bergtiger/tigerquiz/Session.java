@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.bergtiger.tigerquiz.data.MyClose;
+import de.bergtiger.tigerquiz.data.MyString;
 
 public class Session {
 
@@ -284,6 +285,9 @@ public class Session {
 		if((close != MyClose.CLOSE) || ((close == MyClose.CLOSE) && this.close)) {
 			this.closeInventory();
 			this.plugin.getSessions().removeSession(this.player);
+			if(close == MyClose.RELOAD) {
+				this.player.sendMessage(MyString.QUIZ_RELOAD.colored());
+			}
 		}
 		if(!this.close) {
 			this.close = true;

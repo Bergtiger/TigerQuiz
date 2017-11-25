@@ -30,6 +30,10 @@ public class TigerQuiz extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
+		this.getLogger().info("close open Quizzes");
+		this.sessionOverview.reload();
+		this.myListenerOverview.deaktivate();
+		this.quizAdministration.reload();
 		this.getLogger().info("end");
 	}
 
@@ -62,5 +66,8 @@ public class TigerQuiz extends JavaPlugin {
 	 */
 	public void reload(){
 		//TODO
+		this.sessionOverview.reload();
+		this.myListenerOverview.deaktivate();
+		this.quizAdministration.reload();
 	}
 }

@@ -194,7 +194,7 @@ public class QuizAdministration {
 	public boolean deleteQuiz(String quiz) {
 		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz);
 		if(file.exists() && file.isDirectory()) {
-			file.delete();
+			return file.delete();
 		}
 		return false;
 	}
@@ -355,5 +355,13 @@ public class QuizAdministration {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * clears loaded Data
+	 * @return true when finished
+	 */
+	public boolean reload() {
+		return this.loadQuiz.reload();
 	}
 }

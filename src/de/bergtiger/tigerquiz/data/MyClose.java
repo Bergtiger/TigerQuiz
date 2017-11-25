@@ -6,5 +6,6 @@ public enum MyClose {
 	QUIT,
 	RETURN,
 	WRONG,
-	FINISH;
+	FINISH,
+	RELOAD;
 }

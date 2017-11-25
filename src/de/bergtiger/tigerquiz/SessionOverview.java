@@ -1,8 +1,11 @@
 package de.bergtiger.tigerquiz;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.bukkit.entity.Player;
+
+import de.bergtiger.tigerquiz.data.MyClose;
 
 public class SessionOverview {
 
@@ -91,5 +94,19 @@ public class SessionOverview {
 			this.plugin.getLogger().info("Could not start Quiz. Did you check the player session before?");
 		}
 		return false;
+	}
+	
+	/**
+	 * removes all Sessions (closes them)
+	 * @return true when finished
+	 */
+	public boolean reload() {
+		if((this.sessions != null) && (!this.sessions.isEmpty())) {
+			Iterator<String> keys = this.sessions.keySet().iterator();
+			while(keys.hasNext()) {
+				this.sessions.get(keys.next()).exit(MyClose.RELOAD);
+			}
+		}
+		return true;
 	}
 }

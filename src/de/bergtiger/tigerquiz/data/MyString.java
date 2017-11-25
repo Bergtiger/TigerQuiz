@@ -22,7 +22,12 @@ public enum MyString {
 	COMMANDS_LIST	("&e/tigerquiz list [quiz/question/answer]"),
 	COMMANDS_CREATE	("&e/tigerquiz create [quiz/question/answer]"),
 	COMMANDS_DELETE	("&e/tigerquiz delete [quiz/question/answer]"),
-	COMMANDS_RELOAD	("&b/tigerlist reload - &7reloads config"),
+	COMMANDS_RELOAD	("&e/tigerlist reload"),
+	
+	HELP_START (""),
+	HELP_LIST ("&a/tigerquiz list &6[&equiz&6/ &equestion&6/ &eanswer&6] &8[&7quiz&8] [&7question&8]\n  &eThe first parameter describes the type to be listed.\n  &eThe rest specifies the items to be listed."),
+	HELP_CREATE ("&a/tigerquiz create &6[&equiz&6/ &equestion&6/ &eanswer&6] &8[&7quiz&8] [&7question&8] [&7answer&8] &6[&eparameter&6]\n  &eThe first parameter describes the type to be created.\n  &eThe rest specifies the items to be created.\n  &efor a list of parameter &6see parameter"),
+	HELP_DELETE ("&a/tigerquiz delete &6[&equiz&6/ &equestion&6/ &eanswer&6] &8[&7quiz&8] [&7question&8] [&7answer&8]\n  &eThe first parameter describes the type to be deleted.\n  &eThe rest specifies the item to be deleted."),
 	
 	RELOAD ("&aTigerQuiz reloaded"), 
 	
@@ -46,7 +51,9 @@ public enum MyString {
 	QUIZ_LOAD_ONETIMEUSE	("&cyou have already done the quiz"),
 	QUIZ_LOAD_ERROR			("&cQuiz load error"),
 	QUIZ_START_ERROR		("&cQuiz could not start. Player in quiz/no quiz"),
-	QUIZ_START_NOPLAYER		("&cNot a Player");
+	QUIZ_START_NOPLAYER		("&cNot a Player"),
+	
+	QUIZ_RELOAD	("&cYour Quiz was reloaded. Please try it again.");
 	
 	private String args;
 	

@@ -93,24 +93,6 @@ public class LoadQuiz {
 		return null;
 	}
 	
-	/** 
-	 * creates a new List of Questions (real not only pointers)
-	 * @param quiz
-	 * @return
-	 */
-	@Deprecated
-	private List<Question> newQuizQuestion(String quiz) {
-		List<Question> questions = this.questions.get(quiz);
-		if((questions != null) && (questions.isEmpty())) {
-			List<Question> args = new ArrayList<Question>();
-			for(Question question : questions) {
-				args.add(question.copy());
-			}
-			return args;
-		}
-		return null;
-	}
-	
 	/**
 	 * returns a new Session or null if quiz not exists
 	 * @param quiz
@@ -483,5 +465,19 @@ public class LoadQuiz {
 		//TODO
 		if(maxSlot > (size * 9)) size = (maxSlot / 9) + 1;
 		return size;
+	}
+	
+	/**
+	 * clears loaded data
+	 * @return true when finished
+	 */
+	public boolean reload() {
+		if(this.quizzes != null) {
+			this.quizzes.clear();
+		}
+		if(this.questions != null) {
+			this.questions.clear();
+		}
+		return true;
 	}
 }
