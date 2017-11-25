@@ -188,6 +188,7 @@ public class QuizAdministration {
 		File file = new File("/plugins/" + this.plugin.getName() + "/quiz/" + quiz);
 		if(file.exists() && file.isDirectory()) {
 			file.delete();
+			return true;
 		}
 		return false;
 	}
