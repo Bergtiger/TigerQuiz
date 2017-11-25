@@ -12,6 +12,7 @@ import de.bergtiger.tigerquiz.Session;
 import de.bergtiger.tigerquiz.TigerQuiz;
 import de.bergtiger.tigerquiz.data.MyPermission;
 import de.bergtiger.tigerquiz.data.MyString;
+import de.bergtiger.tigerquiz.data.MyText;
 
 public class Commands implements CommandExecutor{
 
@@ -48,9 +49,21 @@ public class Commands implements CommandExecutor{
 			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get())) cs.sendMessage(MyString.COMMANDS_HELP.colored());
 			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.RELOAD.get())) cs.sendMessage(MyString.COMMANDS_RELOAD.colored());
 			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get()) || cs.hasPermission(MyPermission.QUIZ_START_OTHER.get()) || cs.hasPermission(MyPermission.QUIZ_START.get())) cs.sendMessage(MyString.COMMANDS_START.colored());
-			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_LIST.get())) cs.sendMessage(MyString.COMMANDS_LIST.colored());
-			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_ANSWER.get())) cs.sendMessage(MyString.COMMANDS_CREATE.colored());
-			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_ANSWER.get())) cs.sendMessage(MyString.COMMANDS_DELETE.colored());
+			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_ANSWER.get()) || cs.hasPermission(MyPermission.QUIZ_LIST_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_LIST.get())) {
+				//spezial Text - CommandOnClick
+				//cs.sendMessage(MyString.COMMANDS_LIST.colored());
+				MyText.sendCommand(cs, MyString.COMMANDS_LIST.colored(), "/tigerquiz list");
+			}
+			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_ANSWER.get())) {
+				//spezial Text - CommandOnClick
+				//cs.sendMessage(MyString.COMMANDS_CREATE.colored());
+				MyText.sendCommand(cs, MyString.COMMANDS_CREATE.colored(), "/tigerquiz create");
+			}
+			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_DELETE_ANSWER.get())) {
+				//spezial Text - CommandOnClick
+				//cs.sendMessage(MyString.COMMANDS_DELETE.colored());
+				MyText.sendCommand(cs, MyString.COMMANDS_DELETE.colored(), "/tigerquiz delete");
+			}
 		}
 	}
 	
@@ -226,12 +239,14 @@ public class Commands implements CommandExecutor{
 			//tigerquiz create(0) [quiz/question/answer](1)
 			if(args.length >= 2) {
 				switch(args[1].toLowerCase()) {
-				case "quiz"		: this.createQuiz(cs, args); break;
-				case "question"	: this.createQuestion(cs, args); break;
-				case "answer"	: this.createAnswer(cs, args); break;
+					case "quiz"		: this.createQuiz(cs, args); break;
+					case "question"	: this.createQuestion(cs, args); break;
+					case "answer"	: this.createAnswer(cs, args); break;
+					default: cs.sendMessage(MyString.HELP_CREATE.colored());
 				}
 			} else {
 				//commandhelp
+				cs.sendMessage(MyString.HELP_CREATE.colored());
 			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());

@@ -23,7 +23,8 @@ public class TigerQuiz extends JavaPlugin {
 		this.myListenerOverview = new MyListenerOverview(this);
 		this.commands = new Commands(this);
 		this.getLogger().info("initialized");
-		
+		this.config.reload();
+		this.getLogger().info("loaded config");
 		this.getCommand("tigerquiz").setExecutor(commands);
 		this.getLogger().info("started");
 	}
@@ -69,5 +70,6 @@ public class TigerQuiz extends JavaPlugin {
 		this.sessionOverview.reload();
 		this.myListenerOverview.deaktivate();
 		this.quizAdministration.reload();
+		this.config.reload();
 	}
 }

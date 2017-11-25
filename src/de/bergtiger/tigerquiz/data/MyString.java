@@ -18,16 +18,16 @@ public enum MyString {
 	
 	COMMANDS_HELP	("&7/plugininfo "),
 	COMMANDS_HEAD	("&a----<(&6TigerQuiz Commands&a)>----"),
-	COMMANDS_START	("&e/tigerquiz start [quiz] [player]"),
-	COMMANDS_LIST	("&e/tigerquiz list [quiz/question/answer]"),
-	COMMANDS_CREATE	("&e/tigerquiz create [quiz/question/answer]"),
-	COMMANDS_DELETE	("&e/tigerquiz delete [quiz/question/answer]"),
-	COMMANDS_RELOAD	("&e/tigerlist reload"),
+	COMMANDS_START	("&e/tigerquiz start &6[&fquiz&6] [&fplayer&6] &8- &7starts a quiz"),
+	COMMANDS_LIST	("&e/tigerquiz list &6[&fquiz&6/&fquestion&6/&fanswer&6] &8- &7list all items"),
+	COMMANDS_CREATE	("&e/tigerquiz create &6[&fquiz&6/&fquestion&6/&fanswer&6] &8- &7create a new item"),
+	COMMANDS_DELETE	("&e/tigerquiz delete &6[&fquiz&6/&fquestion&f/&fanswer&6] &8- &7deletes a item"),
+	COMMANDS_RELOAD	("&e/tigerlist reload &8- &7reloads plugin"),
 	
-	HELP_START (""),
-	HELP_LIST ("&a/tigerquiz list &6[&equiz&6/ &equestion&6/ &eanswer&6] &8[&7quiz&8] [&7question&8]\n  &eThe first parameter describes the type to be listed.\n  &eThe rest specifies the items to be listed."),
-	HELP_CREATE ("&a/tigerquiz create &6[&equiz&6/ &equestion&6/ &eanswer&6] &8[&7quiz&8] [&7question&8] [&7answer&8] &6[&eparameter&6]\n  &eThe first parameter describes the type to be created.\n  &eThe rest specifies the items to be created.\n  &efor a list of parameter &6see parameter"),
-	HELP_DELETE ("&a/tigerquiz delete &6[&equiz&6/ &equestion&6/ &eanswer&6] &8[&7quiz&8] [&7question&8] [&7answer&8]\n  &eThe first parameter describes the type to be deleted.\n  &eThe rest specifies the item to be deleted."),
+	HELP_START	(""),
+	HELP_LIST	("&a/tigerquiz list &6[&equiz &6/ &equestion &6/ &eanswer&6] &8[&7quiz&8] [&7question&8]\n  &eThe first parameter describes the type to be listed.\n  &eThe rest specifies the items to be listed."),
+	HELP_CREATE	("&a/tigerquiz create &6[&equiz &6/ &equestion &6/ &eanswer&6] &8[&7quiz&8] [&7question&8] [&7answer&8] &6[&eparameter&6]\n  &eThe first parameter describes the type to be created.\n  &eThe rest specifies the items to be created.\n  &efor a list of parameter &6see parameter"),
+	HELP_DELETE	("&a/tigerquiz delete &6[&equiz &6/ &equestion &6/ &eanswer&6] &8[&7quiz&8] [&7question&8] [&7answer&8]\n  &eThe first parameter describes the type to be deleted.\n  &eThe rest specifies the item to be deleted."),
 	
 	RELOAD ("&aTigerQuiz reloaded"), 
 	
@@ -42,12 +42,12 @@ public enum MyString {
 	QUIZ_DELETE_ANSWER		("&aDeletet answer&6(&e-answer-&6) &afromquestion&6(&e-quiz-&6:&e-question-&6)"),
 	QUIZ_DELETE_ERROR		("&cCould not save quiz."),
 	
-	QUIZ_DONE_SELF	("&cYou already did this quiz &6(&e-quiz-&6)"),
-	QUIZ_DONE_OTHER	("&e-player- &chas already done this quiz &6(&e-quiz-&6)"),
-	QUIZ_INSIDE ("&e-player- &cis inside a Quiz. He cant make both at the same time."),
+	QUIZ_DONE_SELF			("&cYou already did this quiz &6(&e-quiz-&6)"),
+	QUIZ_DONE_OTHER			("&e-player- &chas already done this quiz &6(&e-quiz-&6)"),
+	QUIZ_INSIDE				("&e-player- &cis inside a Quiz. He cant make both at the same time."),
 	
-	QUIZ_END		("&aQuiz end"),
-	QUIZ_CANCEL		("&cQuiz canceled"),
+	QUIZ_END				("&aQuiz end"),
+	QUIZ_CANCEL				("&cQuiz canceled"),
 	QUIZ_LOAD_ONETIMEUSE	("&cyou have already done the quiz"),
 	QUIZ_LOAD_ERROR			("&cQuiz load error"),
 	QUIZ_START_ERROR		("&cQuiz could not start. Player in quiz/no quiz"),
@@ -85,7 +85,7 @@ public enum MyString {
 	 * @return String
 	 */
 	@SuppressWarnings("static-access")
-	public String colored(){
+	public String colored() {
 		return this.setColor(this.args);
 	}
 	
@@ -94,7 +94,7 @@ public enum MyString {
 	 * @param args - String to be converted
 	 * @return String
 	 */
-	public static String setColor(String args){
+	public static String setColor(String args) {
 		return ChatColor.translateAlternateColorCodes('&', args);
 	}
 }
