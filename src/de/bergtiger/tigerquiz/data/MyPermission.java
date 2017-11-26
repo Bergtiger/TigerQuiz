@@ -1,12 +1,12 @@
 package de.bergtiger.tigerquiz.data;
 
 public enum MyPermission {
-	ADMIN ("tigerquiz.admin"),
-	USER ("tigerquiz.user"),
+	ADMIN	("tigerquiz.admin"),
+	USER	("tigerquiz.user"),
 	
-	COMMANDS ("tigerquiz.commands"),
-	PLUGININFO ("tigerquiz.info"),
-	RELOAD ("tigerquiz.reload"),
+	COMMANDS	("tigerquiz.commands"),
+	PLUGININFO	("tigerquiz.info"),
+	RELOAD		("tigerquiz.reload"),
 	
 	QUIZ_CREATE				("tigerquiz.quiz.create"),
 	QUIZ_CREATE_QUESTION	("tigerquiz.quiz.create.question"),
@@ -29,7 +29,28 @@ public enum MyPermission {
 		this.permission = args;
 	}
 	
-	public String get(){
+	/**
+	 * permission as it really is
+	 * @return
+	 */
+	public String get() {
 		return this.permission;
+	}
+	
+	/**
+	 * permission with .* - all permissions of this (all quiz)
+	 * @return String
+	 */
+	public String all() {
+		return this.permission + ".*";
+	}
+	
+	/**
+	 * permission with .quiz - only permitted for this quiz
+	 * @param quiz
+	 * @return String
+	 */
+	public String quiz(String quiz) {
+		return this.permission + "." + quiz;
 	}
 }
