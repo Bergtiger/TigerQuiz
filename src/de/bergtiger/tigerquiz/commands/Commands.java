@@ -259,6 +259,7 @@ public class Commands implements CommandExecutor{
 			if(args.length >= 3) {
 				String name;
 				//checkk if quiz with this name exists
+				int size;
 				boolean error = true;
 				boolean showProgress = true;
 				boolean ordered = true;
@@ -275,7 +276,54 @@ public class Commands implements CommandExecutor{
 				if(args.length >= 6) {
 					ordered = Boolean.valueOf(args[6]);
 				}
-					
+				
+				for(int i = 2; i < args.length; i++) {
+					String[] parameter = args[i].split(":");
+					if(parameter.length == 2) {
+						switch(parameter[0].toLowerCase()) {
+							case "name"			: name = parameter[1]; break;
+							case "size"			:
+								try {
+									size = Integer.valueOf(parameter[1]);
+									break;
+								} catch (NumberFormatException e) {
+									//no number
+								}
+							case "error"		:
+								try {
+									error = Boolean.valueOf(parameter[1]);
+									break;
+								} catch (Exception e) {
+									//no boolean
+								}
+							case "showprogress"	:
+								try {
+									showProgress = Boolean.valueOf(parameter[1]);
+									break;
+								} catch (Exception e) {
+									//no boolean
+								}
+							case "ordered"		:
+								try {
+									ordered = Boolean.valueOf(parameter[1]);
+									break;
+								} catch (Exception e) {
+									//no boolean
+								}
+							case "onetimeuse"	:
+								try {
+									oneTimeUse = Boolean.valueOf(parameter[1]);
+									break;
+								} catch (Exception e) {
+									//no boolean
+								}
+							default: //not a value
+						}
+					} else {
+						//not a value check parameter
+					}
+				}
+				
 			} else {
 				//min size 2
 			}
