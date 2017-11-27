@@ -1,5 +1,6 @@
 package de.bergtiger.tigerquiz.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -256,27 +257,16 @@ public class Commands implements CommandExecutor{
 	private void createQuiz(CommandSender cs, String[] args) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get())) {
 			//create(0) [quiz](1) [name](2) [size](3) [error](4) [showProgress](5) [ordered](6) [oneTimeUse](7)
+			//create(0) [quiz](1) [name:value] [size:value] [error:value] [showProgress:value] [ordered:value] [oneTimeUse:value]
 			if(args.length >= 3) {
-				String name;
+				String name = null;
 				//checkk if quiz with this name exists
-				int size;
-				boolean error = true;
+				int size = 1;
+//				boolean error = true;
 				boolean showProgress = true;
 				boolean ordered = true;
 				boolean oneTimeUse = false;
-				if(args.length >= 3) {
-					error = Boolean.valueOf(args[3]);
-				}
-				if(args.length >= 4) {
-					showProgress = Boolean.valueOf(args[4]);
-				}
-				if(args.length >= 5) {
-					ordered = Boolean.valueOf(args[5]);
-				}
-				if(args.length >= 6) {
-					ordered = Boolean.valueOf(args[6]);
-				}
-				
+
 				for(int i = 2; i < args.length; i++) {
 					String[] parameter = args[i].split(":");
 					if(parameter.length == 2) {
@@ -289,13 +279,13 @@ public class Commands implements CommandExecutor{
 								} catch (NumberFormatException e) {
 									//no number
 								}
-							case "error"		:
-								try {
-									error = Boolean.valueOf(parameter[1]);
-									break;
-								} catch (Exception e) {
-									//no boolean
-								}
+//							case "error"		:
+//								try {
+//									error = Boolean.valueOf(parameter[1]);
+//									break;
+//								} catch (Exception e) {
+//									//no boolean
+//								}
 							case "showprogress"	:
 								try {
 									showProgress = Boolean.valueOf(parameter[1]);
@@ -320,10 +310,18 @@ public class Commands implements CommandExecutor{
 							default: //not a value
 						}
 					} else {
-						//not a value check parameter
+						//not a value check parameter (size != 2)
 					}
 				}
+				//werte geladen
 				
+				if(this.plugin.getQuiz().addQuiz(name, size, showProgress, ordered, oneTimeUse)) {
+					//funktioniert
+					System.out.println("Created");
+				} else {
+					//ging nicht
+					System.out.println("created error");
+				}
 			} else {
 				//min size 2
 			}
@@ -335,6 +333,62 @@ public class Commands implements CommandExecutor{
 	private void createQuestion(CommandSender cs, String[] args) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_QUESTION.get())) {
 			//create(0) [question](1) [quizname](2) [question/id](3) [size](4) [error](5) [showProgress](6) [ordered](7) [oneTimeUse](8)
+			//create(0) [question](1) [quizname](2) [question/id:value](3) [size:value] [error:value] [showProgress:value] [ordered:value] [oneTimeUse:value]
+			String quiz = args[2];
+			if(args.length >= 4) {
+				if(this.plugin.getQuiz().isQuiz(quiz)) {
+					String question = null; //id
+					boolean survey = false; //quiz/survey
+					boolean obligation = false;
+					int size = -1;
+			
+					for(int i = 2; i < args.length; i++) {
+						String[] parameter = args[i].split(":");
+						if(parameter.length == 2) {
+							switch(parameter[0].toLowerCase()) {
+								case "name"			: question = parameter[1]; break;
+									
+								case "survey"		:
+									try {
+										survey = Boolean.valueOf(parameter[1]);
+										break;
+									} catch (Exception e) {
+										// no boolean
+									}
+								case "obligation"	:
+									try {
+										obligation = Boolean.valueOf(parameter[1]);
+										break;
+									} catch (Exception e) {
+										// no boolean
+									}
+								case "size"		:
+									try {
+										size = Integer.valueOf(parameter[1]);
+										break;
+									} catch (Exception e) {
+										// no boolean
+									}
+								default: //not a value
+							}
+						} else {
+							//not a value check parameter (size != 2)
+						}
+					}
+					
+					//add
+					if(this.plugin.getQuiz().addQuestion(quiz, question, size, survey, obligation)) {
+						//worked
+					} else {
+						//not worked
+					}
+				} else {
+					//not a Quiz
+					cs.sendMessage(MyString.NOQUIZ.colored().replace("-quiz-", quiz));
+				}
+			} else {
+				
+			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}
@@ -342,7 +396,107 @@ public class Commands implements CommandExecutor{
 	
 	private void createAnswer(CommandSender cs, String[] args) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_QUESTION.get()) || cs.hasPermission(MyPermission.QUIZ_CREATE_ANSWER.get())) {
+			//create(0) [question](1) [quizname](2) [question/id](3) [answer/id](4) [text:value] [function:value] [correct:value]
+			if(args.length >= 5) {
+				String quiz = args[2];
+				String question = args[3]; //id
+				if(this.plugin.getQuiz().isQuiz(quiz)) {
+					if(this.plugin.getQuiz().isQuestion(quiz, question)) {
+						String answer = args[4];
+						String name = null;
+						boolean function = false;
+						boolean correct = false;
+						byte data = 0;
+						List<String> lore = null;
+						String material = null;
+						List<String> enchantment = null;
+						int posX = 0;
+						int posY = 0;
 			
+						for(int i = 2; i < args.length; i++) {
+							String[] parameter = args[i].split(":");
+							if(parameter.length == 2) {
+								switch(parameter[0].toLowerCase()) {
+									case "text"		: name = parameter[1]; break;
+									
+									case "material"	: material = parameter[1]; break;
+									
+									case "function"	:
+										try {
+											function = Boolean.valueOf(parameter[1]);
+											break;
+										} catch (Exception e) {
+											// no boolean
+										}
+									
+									case "correct"	:
+										try {
+											correct = Boolean.valueOf(parameter[1]);
+											if(!function) function = true;
+											break;
+										} catch (Exception e) {
+											// no boolean
+										}
+										
+									case "data" :
+										try {
+											data = Byte.valueOf(parameter[1]);
+										} catch (NumberFormatException e) {
+											//no int
+										}
+										
+									case "posx" : case "x" :
+										try {
+											posX = Integer.valueOf(parameter[1]);
+										} catch (NumberFormatException e) {
+											//no int
+										}
+									case "posy" : case "y" :
+										try {
+											posX = Integer.valueOf(parameter[1]);
+										} catch (NumberFormatException e) {
+											//no int
+										}
+									case "pos" :
+										try {
+											int pos = Integer.valueOf(parameter[1]);
+											posX = pos % 9; //zeile
+											posY = pos / 9; //spalte
+										} catch (NumberFormatException e) {
+											//no int
+										}
+										
+									case "lore" :
+										String[] blubb = parameter[1].split(";");
+										lore = new ArrayList<String>();
+										for(int j = 0; j < blubb.length; j++) {
+											lore.add(blubb[j]);
+										}
+									case "enchantment" :
+										String[] blub = parameter[1].split(";");
+										enchantment = new ArrayList<String>();
+										for(int j = 0; j < blub.length; j++) {
+											enchantment.add(blub[j]);
+										}
+									default:
+								}
+							}
+						}
+						
+						//add
+						if(this.plugin.getQuiz().addAnswer(quiz, question, answer, function, correct, name, lore, material, data, enchantment, posX, posY)) {
+							//worked
+						} else {
+							//not worked
+						}
+						
+					} else {
+						cs.sendMessage(MyString.NOQUESTION.colored().replace("-question-", question));
+					}
+				} else {
+					cs.sendMessage(MyString.NOQUIZ.colored().replace("-quiz-", quiz));
+				}
+			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}

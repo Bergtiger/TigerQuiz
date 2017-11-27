@@ -108,16 +108,18 @@ public class QuizAdministration {
 	 * @param quiz - quiz title/id
 	 * @param question - question title/id
 	 * @param size - how big the shown chest is x * 9
-	 * @param function - quiz or survey
+	 * @param survey - quiz or survey
+	 * @param obligation - if question musst be answered
 	 * @return
 	 */
-	public boolean addQuestion(String quiz, String question, int size, String function) {
+	public boolean addQuestion(String quiz, String question, int size, boolean survey, boolean obligation) {
 		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 			String prefix = "Question." + question + ".";
 			cfg.addDefault(prefix + "Size", size);
-			cfg.addDefault(prefix + "Function", function);
+			cfg.addDefault(prefix + "Survey", survey);
+			cfg.addDefault(prefix + "Obligation", obligation);
 			
 			cfg.options().copyHeader(true);
 			cfg.options().copyDefaults(true);
