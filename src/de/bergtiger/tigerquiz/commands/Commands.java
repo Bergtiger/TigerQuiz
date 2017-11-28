@@ -31,7 +31,8 @@ public class Commands implements CommandExecutor{
 				case "list"		: this.list(cs, args); break;
 				case "create"	: this.create(cs, args); break;
 				case "delete"	: this.delete(cs, args); break;
-				case "reload" : this.reload(cs); break;
+				case "reload"	: this.reload(cs); break;
+//				case "opendialog":this.openDialog(cs); break;
 				default: this.commands(cs); break;
 			}
 		} else {
@@ -639,4 +640,19 @@ public class Commands implements CommandExecutor{
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}
 	}
+	
+//	private void openDialog(CommandSender cs) {
+//		if(cs.hasPermission(MyPermission.ADMIN.get())) {
+//			if(cs instanceof Player) {
+//				Player  p = (Player)cs;
+//				System.out.println("test");
+//				Inventory inventory = Bukkit.createInventory(null, InventoryType.CREATIVE, "TigerQuiz Itemauswahl");
+//				p.openInventory(inventory);
+//			} else {
+//				cs.sendMessage(MyString.NOPLAYER.colored());
+//			}
+//		} else {
+//			cs.sendMessage(MyString.NOPERMISSIONS.colored());
+//		}
+//	}
 }
