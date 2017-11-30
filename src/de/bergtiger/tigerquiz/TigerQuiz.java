@@ -3,6 +3,7 @@ package de.bergtiger.tigerquiz;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bergtiger.tigerquiz.commands.Commands;
+import de.bergtiger.tigerquiz.data.CheckVersion;
 import de.bergtiger.tigerquiz.listener.MyListenerOverview;
 
 public class TigerQuiz extends JavaPlugin {
@@ -12,6 +13,7 @@ public class TigerQuiz extends JavaPlugin {
 	private MyListenerOverview myListenerOverview;
 	private Commands commands;
 	private Config config;
+	private CheckVersion checkVersion;
 	
 	@Override
 	public void onEnable() {
@@ -22,6 +24,8 @@ public class TigerQuiz extends JavaPlugin {
 		this.quizAdministration = new QuizAdministration(this);
 		this.myListenerOverview = new MyListenerOverview(this);
 		this.commands = new Commands(this);
+		this.checkVersion = new CheckVersion(this);
+		
 		this.getLogger().info("initialized");
 		this.config.reload();
 		this.getLogger().info("loaded config");
@@ -60,6 +64,10 @@ public class TigerQuiz extends JavaPlugin {
 	 */
 	public MyListenerOverview getListener() {
 		return this.myListenerOverview;
+	}
+	
+	public CheckVersion getVersion() {
+		return this.checkVersion;
 	}
 	
 	/**
