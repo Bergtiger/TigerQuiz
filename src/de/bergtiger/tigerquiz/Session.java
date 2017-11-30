@@ -173,9 +173,15 @@ public class Session {
 	private void penalty() {
 		if((this.penalties != null) && (!this.penalties.isEmpty())) {
 			List<String> penalties = this.penalties.get(this.error);
-			for(String args : penalties) {
-				//intern penalties
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args.replace("-player-", this.player.getName()));
+			if(penalties != null) {
+				for(String args : penalties) {
+					//intern penalties
+					if(args.equalsIgnoreCase("penaltyQuestion")) {
+						this.penaltyQuestion();
+					} else {
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), args.replace("-player-", this.player.getName()));
+					}
+				}
 			}
 		}
 	}
@@ -184,7 +190,7 @@ public class Session {
 	 * spezial error behavior
 	 */
 	public void penaltyQuestion() {
-		this.penaltySize++;
+		this.penaltySize += 1;
 	}
 	
 	/**
@@ -255,10 +261,31 @@ public class Session {
 	}
 	
 	/**
+	 * simulats penalties and searches for penaltyQuestions
+	 */
+	private void penaltySimulation() {
+		if((this.penalties != null) && (!this.penalties.isEmpty())) {
+			for(int i = 1; i < Math.min(100, this.error + 1); i++) {
+				List<String> penalties = this.penalties.get(this.error);
+				if(penalties != null) {
+					for(String args : penalties) {
+						//intern penalties
+						if(args.equalsIgnoreCase("penaltyQuestion")) {
+							this.penaltyQuestion();
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
 	 * starts first Question
 	 */
 	public void start() {
 		//old penalties ?
+		this.penaltySimulation();
+		//start
 		this.nextQuestion();
 	}
 	
@@ -271,7 +298,7 @@ public class Session {
 		}
 		//save player
 		if(this.oneTimeUse) {
-			this.plugin.getQuiz().savePlayer(this.player);
+			this.plugin.getQuiz().savePlayer(this.quizName, this.player);
 		}
 		this.exit(MyClose.FINISH);
 	}

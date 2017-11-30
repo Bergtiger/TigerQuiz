@@ -1,6 +1,8 @@
 package de.bergtiger.tigerquiz;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -319,10 +321,54 @@ public class QuizAdministration {
 		return null;
 	}
 	
-	public boolean savePlayer(Player player) {
+	/**
+	 * saves the oneTimeUse players in a file
+	 * @param quiz - name of quiz
+	 * @param player - player to be saved
+	 * @return
+	 */
+	public boolean savePlayer(String quiz, Player player) {
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/player.txt");
+		if(file.exists()) {
+			//uuid:name
+			try {
+				FileWriter fw = new FileWriter(file, true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				
+				bw.write(player.getName() + "," + player.getUniqueId().toString() + "\n");
+				
+				bw.close();
+				fw.close();
+			} catch (IOException e) {
+				this.plugin.getLogger().info("checkQuizPlayer: can't read file");
+				e.printStackTrace();
+			}
+		} else {
+			//file not exist
+			try {
+				FileWriter fw = new FileWriter(file);
+				BufferedWriter bw = new BufferedWriter(fw);
+				
+				bw.write(player.getName() + "," + player.getUniqueId().toString() + "\n");
+				
+				bw.close();
+				fw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				this.plugin.getLogger().info("savePlayer: can't save file");
+				e.printStackTrace();
+			}
+		}		
 		return false;
 	}
 	
+	/**
+	 * saves error of the player from the quiz
+	 * @param player - player
+	 * @param quiz - quizname
+	 * @param error - amount of error
+	 * @return
+	 */
 	public boolean savePlayerError(Player player, String quiz, int error) {
 		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/errors.yml");
 		if(file.exists()) {

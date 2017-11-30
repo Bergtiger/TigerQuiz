@@ -1,6 +1,9 @@
 package de.bergtiger.tigerquiz;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +32,11 @@ public class LoadQuiz {
 		this.plugin = plugin;
 	}
 	
+	/**
+	 * 
+	 * @param quiz
+	 * @return
+	 */
 	public Session loadQuiz(String quiz) {
 		if(!this.quizzes.containsKey(quiz)) {
 			//loadQuiz
@@ -37,6 +45,11 @@ public class LoadQuiz {
 		return this.newQuizSession(quiz);
 	}
 	
+	/**
+	 * geht questions for the session
+	 * @param session - session you want questions for
+	 * @return
+	 */
 	public boolean loadQuizQuestions(Session session) {
 		if((this.questions == null) || ((this.questions != null) && (!this.questions.containsKey(session.getQuizName())))) {
 			this.loadQuizQuestion(session.getQuizName());
@@ -82,6 +95,11 @@ public class LoadQuiz {
 		return false;
 	}
 	
+	/**
+	 * get a full new instance of the list with new instance of question and answers
+	 * @param args - List of Questions to be cloned
+	 * @return
+	 */
 	private List<Question> cloneQuestions(List<Question> args) {
 		if((args != null) && (!args.isEmpty())) {
 			List<Question> questions = new ArrayList<Question>();
@@ -201,13 +219,34 @@ public class LoadQuiz {
 	 * @return
 	 */
 	public boolean checkQuizPlayer(String quiz, Player player) {
-		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/errors.txt");
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/player.txt");
 		if(file.exists()) {
 			//uuid:name
+			try {
+				FileReader fr = new FileReader(file);
+				BufferedReader br = new BufferedReader(fr);
+				String line = null;
+				while((line = br.readLine()) != null) {
+					if(line.toLowerCase().contains(player.getName()) || line.toLowerCase().contains(player.getUniqueId().toString().toLowerCase())) {
+						br.close();
+						fr.close();
+						return true;
+					}
+				}
+				br.close();
+				fr.close();
+			} catch (IOException e) {
+				this.plugin.getLogger().info("checkQuizPlayer: can't read file");
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 	
+	/**
+	 * loads Question and Answers
+	 * @param quiz
+	 */
 	private void loadQuizQuestion(String quiz) {
 		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/config.yml");
 		if(file.exists()) {
