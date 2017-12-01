@@ -414,6 +414,11 @@ public class QuizAdministration {
 			} else {
 				cfg.addDefault(player.getUniqueId().toString() + "." + question, answer);
 			}
+			if(cfg.contains(player.getUniqueId().toString() + ".Name")) {
+				cfg.set(player.getUniqueId().toString() + ".Name", player.getName());
+			} else {
+				cfg.addDefault(player.getUniqueId().toString() + ".Name", player.getName());
+			}
 			cfg.options().copyDefaults(true);
 			cfg.options().copyHeader(true);
 			
@@ -427,6 +432,7 @@ public class QuizAdministration {
 		} else {
 			//create file
 			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			cfg.addDefault(player.getUniqueId().toString() + ".Name", player.getName());
 			cfg.addDefault(player.getUniqueId().toString() + "." + question, answer);
 			cfg.options().copyDefaults(true);
 			cfg.options().copyHeader(true);

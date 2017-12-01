@@ -11,6 +11,7 @@ public class QuestionSurvey extends Question{
 	
 	public QuestionSurvey(String title, boolean obligation, List<Answer> answers, int size, TigerQuiz plugin) {
 		super(title, obligation, answers, size);
+		this.plugin = plugin;
 	}
 
 	@Override
