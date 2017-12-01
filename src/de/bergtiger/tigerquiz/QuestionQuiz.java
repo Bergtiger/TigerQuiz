@@ -10,7 +10,7 @@ public class QuestionQuiz extends Question {
 	}
 
 	@Override
-	boolean getCorrect(int slot) {
+	boolean getCorrect(int slot, Session session) {
 		//never trust your code! double check it always
 		if((this.answers != null) && (!this.answers.isEmpty())){
 			//find the answer - change to hashmap ???

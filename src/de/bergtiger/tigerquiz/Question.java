@@ -96,7 +96,7 @@ public abstract class Question {
 	 * @param slot - item clicked by player
 	 * @return if the answer was correct
 	 */
-	abstract boolean getCorrect(int slot);
+	abstract boolean getCorrect(int slot, Session session);
 	
 	/**
 	 * creates new Instance of this Question

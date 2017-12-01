@@ -152,7 +152,7 @@ public class Session {
 				this.exit(MyClose.RETURN);
 			} else {
 				if(this.currentQuestion.hasFunction(slot)) {
-					if(this.currentQuestion.getCorrect(slot)) {
+					if(this.currentQuestion.getCorrect(slot, this)) {
 						this.nextQuestion();
 					} else {
 						//wrong answer - abort

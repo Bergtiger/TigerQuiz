@@ -405,6 +405,42 @@ public class QuizAdministration {
 		return false;
 	}
 	
+	public boolean savePlayerAnswer(String quiz, Player player, String question, String answer) {
+		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz + "/survey.yml");
+		if(file.exists()) {
+			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			if(cfg.contains(player.getUniqueId().toString() + "." + question)){
+				cfg.set(player.getUniqueId().toString() + "." + question, answer);
+			} else {
+				cfg.addDefault(player.getUniqueId().toString() + "." + question, answer);
+			}
+			cfg.options().copyDefaults(true);
+			cfg.options().copyHeader(true);
+			
+			try {
+				cfg.save(file);
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} else {
+			//create file
+			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			cfg.addDefault(player.getUniqueId().toString() + "." + question, answer);
+			cfg.options().copyDefaults(true);
+			cfg.options().copyHeader(true);
+			cfg.options().header("SaveFile for Player Errors from Quiz (" + quiz + ")");
+			try {
+				cfg.save(file);
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * clears loaded Data
 	 * @return true when finished

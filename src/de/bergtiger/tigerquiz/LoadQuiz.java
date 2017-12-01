@@ -381,7 +381,7 @@ public class LoadQuiz {
 						ItemStack item = this.getItem(name, lore, this.getMaterial(material), data, this.getEnchantment(enchantment));
 					
 						if((position >= 0) && (item != null)) {
-							Answer answer = new Answer(position, item, function, correct);
+							Answer answer = new Answer(answerID, position, item, function, correct);
 							if(answer != null) {
 								answers.add(answer);
 							}
@@ -394,7 +394,7 @@ public class LoadQuiz {
 				if(!answers.isEmpty()) {
 					if(survey) {
 						//survey
-						questionsAll.add(new QuestionSurvey(question, obligation, answers, size));
+						questionsAll.add(new QuestionSurvey(question, obligation, answers, size, this.plugin));
 					} else {
 						//quiz
 						questionsAll.add(new QuestionQuiz(question, obligation, answers, size));

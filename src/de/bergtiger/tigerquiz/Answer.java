@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Answer {
 
+	protected String id;
 	protected int slot;
 	private boolean function;
 	private boolean correct;
@@ -20,7 +21,8 @@ public class Answer {
 	 * @param function - if it has a function - like true/false
 	 * @param correct - the true/false value
 	 */
-	public Answer(int slot, ItemStack item, boolean function, boolean correct){
+	public Answer(String id, int slot, ItemStack item, boolean function, boolean correct){
+		this.id = id;
 		this.slot = slot;
 		this.item = item;
 		this.function = function;
@@ -32,7 +34,15 @@ public class Answer {
 	 * @return
 	 */
 	public Answer copy() {
-		return new Answer(this.slot, this.item, this.function, this.correct);
+		return new Answer(this.id, this.slot, this.item, this.function, this.correct);
+	}
+	
+	/**
+	 * id of answer (id from config)
+	 * @return
+	 */
+	public String getId() {
+		return this.id;
 	}
 	
 	/**
