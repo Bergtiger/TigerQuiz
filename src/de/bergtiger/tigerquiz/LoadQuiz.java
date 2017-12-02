@@ -466,7 +466,6 @@ public class LoadQuiz {
 		if(maxSlot > (size * 9)) size = (maxSlot / 9) + 1;
 		return size;
 	}
-	
 	/**
 	 * clears loaded data
 	 * @return true when finished
