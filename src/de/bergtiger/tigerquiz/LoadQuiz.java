@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.bergtiger.tigerquiz.data.MyClose;
 import de.bergtiger.tigerquiz.data.MyString;
 
 public class LoadQuiz {
@@ -518,5 +519,26 @@ public class LoadQuiz {
 			this.questions.clear();
 		}
 		return true;
+	}
+	/**
+	 * delete a session with special key from map. 
+	 * Besides remove the player falls he in this Session is 
+	 * @param quiz key 
+	 * @return true falls Session exist and is deletet
+	 */
+	public boolean deleteSession(String quiz) {
+		if(quizzes!=null && !quizzes.isEmpty()) {
+			for(Session session : quizzes.values()) {
+				if(session.getQuizName().equals(quiz)) {
+					//remove Player in this session
+					this.plugin.getSessions().removeSession(session.getPlayer());
+					session.exit(MyClose.DELETE);
+					//remove den quiz from map
+					quizzes.remove(quiz);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

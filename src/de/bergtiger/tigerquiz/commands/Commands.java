@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.bergtiger.tigerquiz.LoadQuiz;
 import de.bergtiger.tigerquiz.Session;
 import de.bergtiger.tigerquiz.TigerQuiz;
 import de.bergtiger.tigerquiz.data.MyPermission;
@@ -550,7 +551,6 @@ public class Commands implements CommandExecutor{
 			//yes question warning ?
 			if(this.plugin.getQuiz().isQuiz(quiz)) {
 				if(this.plugin.getQuiz().deleteQuiz(quiz)) {
-					this.plugin.getSessions().deleteSession(quiz);
 					cs.sendMessage(MyString.QUIZ_DELETE_QUIZ.colored().replace("-quiz-", quiz));
 				} else {
 					cs.sendMessage(MyString.QUIZ_DELETE_ERROR.colored());

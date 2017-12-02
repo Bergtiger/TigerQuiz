@@ -109,24 +109,5 @@ public class SessionOverview {
 		}
 		return true;
 	}
-	/**
-	 * delete a session with special key from map. 
-	 * Besides remove the player falls he in this Session is 
-	 * @param quiz key 
-	 * @return true falls Session exist and is deletet
-	 */
-	public boolean deleteSession(String quiz) {
-		if(sessions!=null && !sessions.isEmpty()) {
-			for(Session session : sessions.values()) {
-				if(session.getQuizName().equals(quiz)) {
-					//remove Player in this session
-					removeSession(session.getPlayer());
-					session.exit(MyClose.DELETE);
-					sessions.remove(quiz);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	
 }

@@ -198,6 +198,8 @@ public class QuizAdministration {
 	public boolean deleteQuiz(String quiz) {
 		File file = new File("plugins/" + this.plugin.getName() + "/Quiz/" + quiz);
 		if(file.exists() && file.isDirectory()) {
+			//first remove the player on Session, then delete Quiz
+			loadQuiz.deleteSession(quiz);
 			return file.delete();
 		}
 		return false;

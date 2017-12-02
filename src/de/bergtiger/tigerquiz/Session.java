@@ -196,7 +196,7 @@ public class Session {
 	/**
 	 * perform to show next question
 	 */
-	private boolean nextQuestion() {
+	public boolean nextQuestion() {
 		if(currentQuestion != null) {
 			//close currentQuestion
 			//TODO WARNING - openInventory forces closeInventory
