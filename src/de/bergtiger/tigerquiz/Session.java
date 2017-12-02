@@ -309,6 +309,10 @@ public class Session {
 	public void exit(MyClose close) {
 		//TODO
 		System.out.println("close: " + close);
+		if(close == MyClose.DELETE) {
+			System.out.println("delete: " + close);
+			this.player.sendMessage(MyString.QUIZ_DELETE_QUIZ.colored());
+		}
 		if((close != MyClose.CLOSE) || ((close == MyClose.CLOSE) && this.close)) {
 			this.closeInventory();
 			this.plugin.getSessions().removeSession(this.player);

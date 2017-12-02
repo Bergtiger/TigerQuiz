@@ -550,6 +550,7 @@ public class Commands implements CommandExecutor{
 			//yes question warning ?
 			if(this.plugin.getQuiz().isQuiz(quiz)) {
 				if(this.plugin.getQuiz().deleteQuiz(quiz)) {
+					this.plugin.getSessions().deleteSession(quiz);
 					cs.sendMessage(MyString.QUIZ_DELETE_QUIZ.colored().replace("-quiz-", quiz));
 				} else {
 					cs.sendMessage(MyString.QUIZ_DELETE_ERROR.colored());
