@@ -76,14 +76,18 @@ public class Commands implements CommandExecutor{
 	 */
 	private void startQuiz(CommandSender cs, String[] args) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get()) || cs.hasPermission(MyPermission.QUIZ_START_OTHER.get()) || cs.hasPermission(MyPermission.QUIZ_START.get())) {
-			if((args.length == 2) && (cs instanceof Player)) {
-				Player p = (Player) cs;
-				this.startQuiz(cs, args[1], p);
-			} else if ((args.length == 3) && (cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_START_OTHER.get()) || (cs.getName().equals(args[2])))){
-				Player p = this.getPlayer(args[2]);
-				this.startQuiz(cs, args[1], p);
+			if(this.plugin.getSessions().exitsSession()) {
+				cs.sendMessage("Currently there can only be one Session at a time.");
 			} else {
-				//TODO -> commandhelp
+				if((args.length == 2) && (cs instanceof Player)) {
+					Player p = (Player) cs;
+					this.startQuiz(cs, args[1], p);
+				} else if ((args.length == 3) && (cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.QUIZ_START_OTHER.get()) || (cs.getName().equals(args[2])))){
+					Player p = this.getPlayer(args[2]);
+					this.startQuiz(cs, args[1], p);
+				} else {
+					//TODO -> commandhelp
+				}
 			}
 		} else {
 			cs.sendMessage(MyString.NOPERMISSIONS.colored());

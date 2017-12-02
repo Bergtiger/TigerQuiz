@@ -147,6 +147,7 @@ public class Session {
 	 * @param slot
 	 */
 	public void receiveAnswer(int slot) {
+//		System.out.println("answer: " + slot);
 		if(currentQuestion != null) {
 			if(this.currentQuestion.isReturn(slot)) {
 				this.exit(MyClose.RETURN);
@@ -200,14 +201,19 @@ public class Session {
 		if(currentQuestion != null) {
 			//close currentQuestion
 			//TODO WARNING - openInventory forces closeInventory
+//			System.out.println("nextQuestion: closeInventory1");
 			this.closeInventory();
+//			System.out.println("nextQuestion: closeInventory2");
 		}
 		//open new Question
 		if(this.quizSize < (this.quizMaxSize + this.penaltySize)){
 			//next question
 			Question question = this.getQuestion();
 			if(question != null) {
+//				System.out.println("nextQuestion: openInventory1");
 				this.player.openInventory(question.getInventory(this.getTitle()));
+				this.close = true;
+//				System.out.println("nextQuestion: openInventory2");
 				this.currentQuestion = question;
 				this.quizSize++;
 			} else {
@@ -266,8 +272,8 @@ public class Session {
 	private void penaltySimulation() {
 		if((this.penalties != null) && (!this.penalties.isEmpty())) {
 			for(int i = 1; i < Math.min(100, this.error + 1); i++) {
-				List<String> penalties = this.penalties.get(this.error);
-				if(penalties != null) {
+				List<String> penalties = this.penalties.get(i);
+				if((penalties != null) && (!penalties.isEmpty())) {
 					for(String args : penalties) {
 						//intern penalties
 						if(args.equalsIgnoreCase("penaltyQuestion")) {
@@ -308,16 +314,27 @@ public class Session {
 	 */
 	public void exit(MyClose close) {
 		//TODO
-		System.out.println("close: " + close);
-		if((close != MyClose.CLOSE) || ((close == MyClose.CLOSE) && this.close)) {
+//System.out.println("close: " + close);
+//		System.out.println("exit reason " + close);
+		if(close == MyClose.CLOSE) {
+			if(this.close) {
+				//wird geschlossen
+//				System.out.println("exit removeSession");
+				this.plugin.getSessions().removeSession(this.player);
+			} else {
+				//wird nicht geschlossen
+//				System.out.println("exit hold Session");
+				//this.close = true;
+			}
+			return;
+		}
+//		System.out.println("exit other");
+		if(close != MyClose.CLOSE) {
 			this.closeInventory();
 			this.plugin.getSessions().removeSession(this.player);
 			if(close == MyClose.RELOAD) {
 				this.player.sendMessage(MyString.QUIZ_RELOAD.colored());
 			}
-		}
-		if(!this.close) {
-			this.close = true;
 		}
 	}
 }

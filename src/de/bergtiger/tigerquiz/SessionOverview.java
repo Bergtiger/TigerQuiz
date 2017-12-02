@@ -67,6 +67,7 @@ public class SessionOverview {
 	 * @return
 	 */
 	public boolean removeSession(Player p) {
+//		System.out.println("removeSession: " + p.getName());
 		if((this.sessions != null) && (!this.sessions.isEmpty())) {
 			if(this.sessions.remove(p.getName()) != null) {
 				if(this.sessions.isEmpty()) {
@@ -108,5 +109,16 @@ public class SessionOverview {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * check if there is a player in a quiz
+	 * @return
+	 */
+	public boolean exitsSession() {
+		if((this.sessions != null) && (!this.sessions.isEmpty())) {
+			return true;
+		}
+		return false;
 	}
 }
