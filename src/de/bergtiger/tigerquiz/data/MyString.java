@@ -53,7 +53,8 @@ public enum MyString {
 	QUIZ_START_ERROR		("&cQuiz could not start. Player in quiz/no quiz"),
 	QUIZ_START_NOPLAYER		("&cNot a Player"),
 	
-	QUIZ_RELOAD	("&cYour Quiz was reloaded. Please try it again.");
+	QUIZ_RELOAD	("&cYour Quiz was reloaded. Please try it again."),
+	QUIZ_DELETED ("&cYour Quiz was deleted. Sorry");
 	
 	private String args;
 	

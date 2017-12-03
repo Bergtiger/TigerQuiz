@@ -335,6 +335,9 @@ public class Session {
 			if(close == MyClose.RELOAD) {
 				this.player.sendMessage(MyString.QUIZ_RELOAD.colored());
 			}
+			if(close == MyClose.DELETE) {
+				this.player.sendMessage(MyString.QUIZ_DELETED.colored());
+			}
 		}
 	}
 }

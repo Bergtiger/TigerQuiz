@@ -507,6 +507,30 @@ public class LoadQuiz {
 	}
 	
 	/**
+	 * delete saved quiz config
+	 * @param quiz
+	 * @return
+	 */
+	public boolean deleteQuiz(String quiz) {
+		if((this.quizzes != null) && (!this.quizzes.isEmpty())) {
+			if(this.quizzes.remove(quiz) != null) return true; //deletet
+		}
+		return false; //no such quiz saved
+	}
+		
+	/**
+	 * delete saved questions from a quiz
+	 * @param quiz
+	 * @return
+	 */
+	public boolean deleteQuestions(String quiz) {
+		if((this.questions != null) && (!this.questions.isEmpty())) {
+			if(this.questions.remove(quiz) != null) return true; // war vorhanden wurde gelöscht
+		}
+		return false;//nichts vorhanden
+	}
+	
+	/**
 	 * clears loaded data
 	 * @return true when finished
 	 */
