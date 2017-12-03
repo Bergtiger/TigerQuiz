@@ -307,21 +307,28 @@ public class Session {
 	 * ends session immediately
 	 */
 	public void exit(MyClose close) {
-		//TODO
-		System.out.println("close: " + close);
-		if(close == MyClose.DELETE) {
-			System.out.println("delete: " + close);
-			this.player.sendMessage(MyString.QUIZ_DELETE_QUIZ.colored());
+		if(close == MyClose.CLOSE) {
+			if(this.close) {
+				//wird geschlossen
+//				System.out.println("exit removeSession");
+				this.plugin.getSessions().removeSession(this.player);
+			} else {
+				//wird nicht geschlossen
+//				System.out.println("exit hold Session");
+				//this.close = true;
+			}
+			return;
 		}
-		if((close != MyClose.CLOSE) || ((close == MyClose.CLOSE) && this.close)) {
+//		System.out.println("exit other");
+		if(close != MyClose.CLOSE) {
 			this.closeInventory();
 			this.plugin.getSessions().removeSession(this.player);
 			if(close == MyClose.RELOAD) {
 				this.player.sendMessage(MyString.QUIZ_RELOAD.colored());
 			}
-		}
-		if(!this.close) {
-			this.close = true;
+			if(close == MyClose.DELETE) {
+				this.player.sendMessage(MyString.QUIZ_DELETE_QUIZ.colored());
+			}
 		}
 	}
 }

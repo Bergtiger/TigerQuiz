@@ -58,15 +58,15 @@ public class LoadQuiz {
 		if((this.questions != null) && (!this.questions.isEmpty())) {
 			List<Question> questions = this.cloneQuestions(this.questions.get(session.getQuizName()));
 			if(questions != null) {
-				List<Question> questionhauptfragen = new ArrayList<Question>(); //fragen die standartm‰ﬂig gestellt werden
-				//fragen die beantwortet werden m¸ssen
+				List<Question> questionhauptfragen = new ArrayList<Question>(); //fragen die standartm√§√üig gestellt werden
+				//fragen die beantwortet werden m√ºssen
 				for(int i = 0; i < questions.size(); i++) {
 					if(questions.get(i).isObligation()) {
 						questionhauptfragen.add(questions.remove(i));
 						i--;
 					}
 				}
-				//auff¸llen
+				//auff√ºllen
 				while (questionhauptfragen.size() < session.getSize()) {
 					if(!questions.isEmpty()) {
 						//sorted ?
@@ -520,25 +520,28 @@ public class LoadQuiz {
 		}
 		return true;
 	}
+
 	/**
-	 * delete a session with special key from map. 
-	 * Besides remove the player falls he in this Session is 
-	 * @param quiz key 
-	 * @return true falls Session exist and is deletet
+	 * delete saved quiz config
+	 * @param quiz
+	 * @return
 	 */
-	public boolean deleteSession(String quiz) {
-		if(quizzes!=null && !quizzes.isEmpty()) {
-			for(Session session : quizzes.values()) {
-				if(session.getQuizName().equals(quiz)) {
-					//remove Player in this session
-					this.plugin.getSessions().removeSession(session.getPlayer());
-					session.exit(MyClose.DELETE);
-					//remove den quiz from map
-					quizzes.remove(quiz);
-					return true;
-				}
-			}
+	public boolean deleteQuiz(String quiz) {
+		if((this.quizzes != null) && (!this.quizzes.isEmpty())) {
+			if(this.quizzes.remove(quiz) != null) return true; //deletet
 		}
-		return false;
+		return false; //no such quiz saved
+	}
+		
+	/**
+	 * delete saved questions from a quiz
+	 * @param quiz
+	 * @return
+	 */
+	public boolean deleteQuestions(String quiz) {
+		if((this.questions != null) && (!this.questions.isEmpty())) {
+			if(this.questions.remove(quiz) != null) return true; // war vorhanden wurde gelÔøΩscht
+		}
+		return false;//nichts vorhanden
 	}
 }

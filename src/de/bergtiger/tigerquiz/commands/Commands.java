@@ -552,7 +552,14 @@ public class Commands implements CommandExecutor{
 			if(this.plugin.getQuiz().isQuiz(quiz)) {
 				if(this.plugin.getQuiz().deleteQuiz(quiz)) {
 					cs.sendMessage(MyString.QUIZ_DELETE_QUIZ.colored().replace("-quiz-", quiz));
-				} else {
+				} 
+				if(this.plugin.getQuiz().load().deleteQuestions(quiz)) {
+					//deleted saved questions
+				}
+				if(this.plugin.getSessions().removeSessions(quiz)) {
+					//removed aktiv players
+				}
+				else {
 					cs.sendMessage(MyString.QUIZ_DELETE_ERROR.colored());
 				}
 			} else {

@@ -109,5 +109,22 @@ public class SessionOverview {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * deletes all sessions from Quiz quiz
+	 * @param quiz - name/id of quiz which will be deletet
+	 * @return true when finished, false when empty
+	 */
+	public boolean removeSessions(String quiz) {
+		if((this.sessions != null) && (!this.sessions.isEmpty())) {
+			Iterator<String> keys = this.sessions.keySet().iterator();
+			while(keys.hasNext()) {
+				String key = keys.next();
+				Session session = this.sessions.get(key);
+				session.exit(MyClose.DELETE);
+			}
+			return true;
+		}
+		return false;
+	}
 }
