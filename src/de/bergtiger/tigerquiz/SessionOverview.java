@@ -1,7 +1,9 @@
 package de.bergtiger.tigerquiz;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 
@@ -138,5 +140,18 @@ public class SessionOverview {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * get keys
+	 * @return
+	 */
+	public List<String> getSessions() {
+		if((this.sessions != null) && (!this.sessions.isEmpty())) {
+			List<String> sessions = new ArrayList<String>();
+			sessions.addAll(this.sessions.keySet());
+			return sessions;
+		}
+		return null;
 	}
 }

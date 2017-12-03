@@ -13,6 +13,10 @@ public enum MyString {
 	PLUGININFO_INFO_HEAD	("&a----<(&6TigerQuiz&a)>----"),
 	PLUGININFO_INFO_VERSION	("&aVersion: &e-version-"),
 	
+	PLUGININFO_LIST_PLAYER_HEAD ("&aPlayer in Quiz:"),
+	PLUGININFO_LIST_PLAYER_BODY ("  &e-player-"),
+	PLUGININFO_LIST_PLAYER_EMPTY (" &cno sessions"),
+	
 	PLUGININFO_LIST_HEAD	("&aQuiz:"),
 	PLUGININFO_LIST_BODY	("  -color--quiz-"),
 	

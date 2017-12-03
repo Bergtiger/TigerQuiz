@@ -32,6 +32,7 @@ public class Commands implements CommandExecutor{
 				case "create"	: this.create(cs, args); break;
 				case "delete"	: this.delete(cs, args); break;
 				case "reload"	: this.reload(cs); break;
+				case "info"		: this.info(cs); break;
 //				case "opendialog":this.openDialog(cs); break;
 				default: this.commands(cs); break;
 			}
@@ -45,7 +46,7 @@ public class Commands implements CommandExecutor{
 	 * shows all posible commands
 	 * @param cs - CommandSender
 	 */
-	private void commands(CommandSender cs){
+	private void commands(CommandSender cs) {
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get()) || cs.hasPermission(MyPermission.COMMANDS.get())){
 			cs.sendMessage(MyString.COMMANDS_HEAD.colored());
 			if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get())) cs.sendMessage(MyString.COMMANDS_HELP.colored());
@@ -66,6 +67,24 @@ public class Commands implements CommandExecutor{
 				//cs.sendMessage(MyString.COMMANDS_DELETE.colored());
 				MyText.sendCommand(cs, MyString.COMMANDS_DELETE.colored(), "/tigerquiz delete");
 			}
+		}
+	}
+	
+	private void info(CommandSender cs) {
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.PLUGININFO.get())) {
+			cs.sendMessage(MyString.PLUGININFO_INFO_HEAD.colored());
+			cs.sendMessage(MyString.PLUGININFO_INFO_VERSION.colored().replace("-version-", this.plugin.getVersion().toString()));
+			cs.sendMessage(MyString.PLUGININFO_LIST_PLAYER_HEAD.colored());
+			List<String> sessions = this.plugin.getSessions().getSessions();
+			if(sessions != null) {
+				for(String args : this.plugin.getSessions().getSessions()) {
+					cs.sendMessage(MyString.PLUGININFO_LIST_PLAYER_BODY.colored().replace("-player-", args));
+				}
+			} else {
+				cs.sendMessage(MyString.PLUGININFO_LIST_PLAYER_EMPTY.colored());
+			}
+		} else {
+			cs.sendMessage(MyString.NOPERMISSIONS.colored());
 		}
 	}
 	

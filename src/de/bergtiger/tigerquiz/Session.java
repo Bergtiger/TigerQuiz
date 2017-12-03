@@ -202,6 +202,7 @@ public class Session {
 			//close currentQuestion
 			//TODO WARNING - openInventory forces closeInventory
 //			System.out.println("nextQuestion: closeInventory1");
+			currentQuestion = null;
 			this.closeInventory();
 //			System.out.println("nextQuestion: closeInventory2");
 		}
@@ -210,10 +211,8 @@ public class Session {
 			//next question
 			Question question = this.getQuestion();
 			if(question != null) {
-//				System.out.println("nextQuestion: openInventory1");
 				this.player.openInventory(question.getInventory(this.getTitle()));
 				this.close = true;
-//				System.out.println("nextQuestion: openInventory2");
 				this.currentQuestion = question;
 				this.quizSize++;
 			} else {
@@ -313,22 +312,13 @@ public class Session {
 	 * ends session immediately
 	 */
 	public void exit(MyClose close) {
-		//TODO
-//System.out.println("close: " + close);
-//		System.out.println("exit reason " + close);
 		if(close == MyClose.CLOSE) {
 			if(this.close) {
 				//wird geschlossen
-//				System.out.println("exit removeSession");
 				this.plugin.getSessions().removeSession(this.player);
-			} else {
-				//wird nicht geschlossen
-//				System.out.println("exit hold Session");
-				//this.close = true;
 			}
 			return;
 		}
-//		System.out.println("exit other");
 		if(close != MyClose.CLOSE) {
 			this.closeInventory();
 			this.plugin.getSessions().removeSession(this.player);

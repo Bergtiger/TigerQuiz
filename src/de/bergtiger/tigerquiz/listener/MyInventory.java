@@ -52,7 +52,6 @@ public class MyInventory extends MyListener {
 	 */
 	private void exit(Player p, MyClose close) {
 		if(this.plugin.getSessions().hasSession(p)) {
-//System.out.println("exit: " + p.getName() + ", " + close);
 			this.plugin.getSessions().getSession(p).exit(close);
 		}
 	}

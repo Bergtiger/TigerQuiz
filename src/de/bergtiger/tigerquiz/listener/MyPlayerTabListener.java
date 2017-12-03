@@ -50,6 +50,8 @@ public class MyPlayerTabListener extends MyListener {
 	 */
 	private List<String> getCommands(CommandSender cs, List<String> completions) {
 		completions.clear();
+		//info
+		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.PLUGININFO.get())) completions.add("info");
 		//help
 		if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get())) completions.add("help");
 		//reload
@@ -75,6 +77,7 @@ public class MyPlayerTabListener extends MyListener {
 	private List<String> getCommands(CommandSender cs, List<String> completions, String message) {
 		completions.clear();
 		switch(message.charAt(0)) {
+		case 'i' : if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.PLUGININFO.get())) completions.add("info"); break;
 		case 'h' : if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get())) completions.add("help"); break;
 		case 'r' : if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.RELOAD.get())) completions.add("reload"); break;
 		case 's' : if(cs.hasPermission(MyPermission.ADMIN.get()) || cs.hasPermission(MyPermission.USER.get()) || cs.hasPermission(MyPermission.QUIZ_START_OTHER.get()) || cs.hasPermission(MyPermission.QUIZ_START.get())) completions.add("start"); break;
